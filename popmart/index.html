@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>The Feeling Machine — Asia Aisle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#E8192C;--cream:#EDE8DF;--charcoal:#2A2520;
+  --terracotta:#C4613A;--stone:#8C7B6B;--black:#111111;
+  --border:rgba(139,123,107,.22);
+  --f-d:'Instrument Serif',Georgia,serif;
+  --f-b:'IBM Plex Sans',system-ui,sans-serif;
+  --f-m:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(0.19,1,0.22,1);
+  --mh:1.8s;--ms:1.2s;--ml:0.6s;
+}
+html{font-size:16px;color-scheme:only light;background:var(--cream)!important}
+body{background:var(--cream)!important;color:var(--charcoal);font-family:var(--f-b);
+  line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+#pb{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:9999;width:0%;transition:width .08s linear}
+.mast{position:fixed;top:1.25rem;left:1.5rem;z-index:9998;font-family:var(--f-m);
+  font-size:.48rem;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(237,232,223,.28);pointer-events:none;transition:color .4s}
+.mast.light{color:var(--stone)}
+.hero{min-height:100dvh;background:var(--black);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:3rem 2rem;position:relative}
+.hero-eye{font-family:var(--f-m);font-size:.52rem;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--terracotta);margin-bottom:2rem;opacity:0;transform:translateY(20px);
+  transition:opacity .6s .15s var(--ease),transform .6s .15s var(--ease)}
+.hero-eye.in{opacity:1;transform:translateY(0)}
+.hero-t{font-family:var(--f-d);font-size:clamp(3.5rem,10vw,7.5rem);font-weight:400;
+  line-height:.95;color:var(--cream);margin-bottom:2rem;opacity:0;letter-spacing:.06em;
+  transform:translateY(60px) skewY(3deg);filter:blur(12px) brightness(1.2);
+  transition:opacity var(--mh) .3s var(--ease),transform var(--mh) .3s var(--ease),
+    filter 1.6s .3s var(--ease),letter-spacing var(--mh) .3s var(--ease)}
+.hero-t.in{opacity:1;transform:translateY(0) skewY(0);filter:blur(0) brightness(1);letter-spacing:-.02em}
+.hero-s{font-family:var(--f-d);font-style:italic;font-size:clamp(.9rem,1.8vw,1.1rem);
+  color:rgba(237,232,223,.38);max-width:520px;line-height:1.65;opacity:0;transform:translateY(20px);
+  transition:opacity .8s .7s var(--ease),transform .8s .7s var(--ease)}
+.hero-s.in{opacity:1;transform:translateY(0)}
+.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  font-family:var(--f-m);font-size:.48rem;letter-spacing:.3em;text-transform:uppercase;
+  color:rgba(237,232,223,.18);animation:ps 2.5s ease infinite}
+@keyframes ps{0%,100%{opacity:.12}50%{opacity:.45}}
+.ch-div{padding:5rem 2rem 2.5rem;background:var(--cream);text-align:center;border-top:1px solid var(--border)}
+.ch-n{font-family:var(--f-m);font-size:.48rem;letter-spacing:.42em;text-transform:uppercase;color:var(--terracotta);margin-bottom:.4rem}
+.ch-t{font-family:var(--f-d);font-size:clamp(1.8rem,4vw,3rem);font-weight:400;color:var(--charcoal);line-height:1.1}
+.ch-interlude{padding:4rem 2rem 2rem;background:var(--cream);text-align:center;border-top:2px solid var(--charcoal)}
+.ch-interlude-label{font-family:var(--f-m);font-size:.48rem;letter-spacing:.42em;text-transform:uppercase;color:var(--charcoal);margin-bottom:.4rem;opacity:.4}
+.ch-interlude-t{font-family:var(--f-d);font-style:italic;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:400;color:var(--charcoal);line-height:1.2}
+.scrolly{display:flex;background:var(--cream)}
+.narrative{flex:0 0 42%;width:42%}
+.sticky-stage{position:sticky;top:0;flex:0 0 58%;width:58%;height:100dvh;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--cream);border-left:1px solid var(--border);overflow:hidden}
+.viz{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:2.5rem 3rem;opacity:0;pointer-events:none;transition:opacity .45s var(--ease)}
+.viz.active{opacity:1;pointer-events:auto}
+.scene{min-height:100dvh;padding:15vh 2.5rem 10vh;display:flex;flex-direction:column;justify-content:center}
+.scene-tag{font-family:var(--f-m);font-size:.48rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--terracotta);margin-bottom:.8rem}
+.scene p{font-size:1rem;line-height:1.8;color:var(--charcoal);max-width:400px;margin-bottom:1rem;font-weight:400}
+.scene p:last-child{margin-bottom:0}
+.scene strong{font-weight:600}.scene em{font-style:italic}
+sup{font-size:.6em}
+.fn{font-family:var(--f-m);font-size:.6em;color:var(--terracotta);cursor:pointer;user-select:none}
+.fn:hover{color:var(--red)}
+#cite-tip{position:fixed;background:var(--charcoal);color:var(--cream);font-family:var(--f-m);
+  font-size:10px;line-height:1.5;letter-spacing:.03em;padding:8px 12px;
+  max-width:320px;border-radius:2px;pointer-events:none;opacity:0;
+  transition:opacity .2s ease;z-index:99999;border-left:2px solid var(--terracotta)}
+.pull-quote{font-family:var(--f-d);font-style:italic;font-size:clamp(1.25rem,2vw,1.65rem);
+  color:var(--charcoal);padding:.6em 0 .6em 1.2em;border-left:3px solid var(--terracotta);
+  margin:2em 0;max-width:380px;line-height:1.35}
+.sf{opacity:0;transition:opacity .8s var(--ease)}.sf.in{opacity:1}
+.ss{transform-box:fill-box;transform-origin:center;opacity:0;transform:scale(.72);
+  transition:opacity var(--ml) var(--ease),transform var(--ml) var(--ease)}.ss.in{opacity:1;transform:scale(1)}
+.sl{stroke-dasharray:999;stroke-dashoffset:999;transition:stroke-dashoffset var(--mh) var(--ease)}.sl.in{stroke-dashoffset:0}
+.se{opacity:0;transform:translateX(-18px);transition:opacity .8s var(--ease),transform .8s var(--ease)}.se.in{opacity:1;transform:translateX(0)}
+.sr{opacity:0;transform:translateY(14px);transition:opacity .8s var(--ease),transform .8s var(--ease)}.sr.in{opacity:1;transform:translateY(0)}
+/* Metric panel */
+.mi-panel{width:100%;height:100%;position:relative;display:flex;align-items:center;padding:3rem;background:var(--cream)}
+.mi-pos-group{display:flex;flex-direction:column;gap:0;width:46%}
+.mi-row{display:flex;align-items:stretch;gap:0;margin-bottom:24px;opacity:0;transform:translateX(-20px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.mi-row.in{opacity:1;transform:translateX(0)}
+.mi-rule{width:3px;background:var(--terracotta);margin-right:14px;flex-shrink:0;min-height:1em}
+.mi-val{font-family:var(--f-d);font-size:clamp(2rem,4vw,3.4rem);font-weight:400;line-height:1;color:var(--charcoal);transition:color .6s ease,font-size .6s ease}
+.mi-val.dimmed{color:var(--stone);font-size:clamp(1.4rem,2.5vw,2.2rem)}
+.mi-lbl{font-family:var(--f-m);font-size:.4rem;letter-spacing:.18em;text-transform:uppercase;color:var(--charcoal);margin-top:5px;transition:color .6s ease}
+.mi-lbl.dimmed{color:var(--stone)}
+.mi-neg{position:absolute;right:5%;top:50%;transform:translateY(-50%) scale(.88);display:flex;align-items:stretch;opacity:0;transition:opacity .6s ease .1s,transform .6s cubic-bezier(.34,1.4,.64,1) .1s}
+.mi-neg.in{opacity:1;transform:translateY(-50%) scale(1)}
+.mi-neg-rule{width:3px;background:var(--red);margin-right:16px;flex-shrink:0}
+.mi-neg-num{font-family:var(--f-d);font-size:clamp(3.5rem,7vw,6.5rem);font-weight:400;line-height:1;color:var(--red)}
+.mi-neg-lbl{font-family:var(--f-m);font-size:.42rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(42,37,32,.5);margin-top:6px}
+.mi-neg-2{font-family:var(--f-d);font-size:clamp(1.1rem,2vw,1.6rem);color:rgba(42,37,32,.45);margin-top:10px;opacity:0;transition:opacity .4s ease .4s}
+.mi-neg-2.in{opacity:1}
+/* Rorschach */
+.rk-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem}
+.rk-svg{opacity:0;filter:blur(8px);transform:scale(.96);transition:opacity 1.2s var(--ease),filter 1.2s var(--ease),transform 1.2s var(--ease)}
+.rk-svg.in{opacity:1;filter:blur(0);transform:scale(1)}
+.rk-labels{display:flex;flex-direction:column;gap:.35rem;align-items:center;opacity:0;transition:opacity .8s .8s var(--ease)}
+.rk-labels.in{opacity:1}
+.rk-label{font-family:var(--f-m);font-size:.48rem;letter-spacing:.32em;text-transform:uppercase;color:var(--charcoal)}
+.rk-label:nth-child(2){color:var(--stone)}.rk-label:nth-child(3){color:rgba(139,123,107,.45)}
+.rk-period{font-family:var(--f-m);font-size:.42rem;letter-spacing:.18em;color:var(--stone);opacity:.55}
+/* Loop canvas */
+#loop-canvas{display:block;width:100%;height:100%}
+/* Assembly line */
+.asm-wrap{width:100%;padding:1.5rem 2rem;overflow:hidden}
+.asm-title{font-family:var(--f-m);font-size:.42rem;letter-spacing:.22em;text-transform:uppercase;color:var(--stone);margin-bottom:1.8rem;text-align:center}
+.asm-belt{display:flex;align-items:flex-end;gap:0;position:relative;border-bottom:2px solid rgba(139,123,107,.35);padding-bottom:0}
+.asm-belt::before{content:'';position:absolute;bottom:-8px;left:0;right:0;height:6px;background:repeating-linear-gradient(90deg,rgba(139,123,107,.2) 0,rgba(139,123,107,.2) 20px,transparent 20px,transparent 40px)}
+.asm-station{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 4px;opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.asm-station.in{opacity:1;transform:translateY(0)}
+.asm-fig{margin-bottom:.6rem}
+.asm-stage{font-family:var(--f-m);font-size:.38rem;letter-spacing:.2em;text-transform:uppercase;color:var(--charcoal);margin-bottom:.3rem;text-align:center}
+.asm-q{font-family:var(--f-m);font-size:.35rem;letter-spacing:.12em;color:var(--stone);text-align:center;line-height:1.5}
+.asm-arrow{display:flex;align-items:center;padding-bottom:2.4rem;color:rgba(139,123,107,.3);font-size:.8rem}
+.asm-final-q{margin-top:2rem;text-align:center;opacity:0;transition:opacity .8s .6s var(--ease)}
+.asm-final-q.in{opacity:1}
+.asm-final-q p{font-family:var(--f-d);font-style:italic;font-size:1.1rem;color:var(--charcoal);margin-bottom:.4rem}
+.asm-final-q span{font-family:var(--f-m);font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);opacity:.45}
+/* Consumer Edge */
+.ce-wrap{width:100%;padding:1.5rem 2rem}
+.ce-title{font-family:var(--f-m);font-size:.42rem;letter-spacing:.22em;text-transform:uppercase;color:var(--terracotta);margin-bottom:.6rem}
+.ce-note{font-family:var(--f-m);font-size:.38rem;color:var(--stone);margin-bottom:1.2rem;opacity:.7}
+.ce-src{font-family:var(--f-m);font-size:.36rem;letter-spacing:.06em;color:var(--stone);opacity:.55;margin-top:.6rem}
+/* 38% callout */
+.c38{display:flex;align-items:flex-start;gap:0}
+.c38-rule{width:3px;background:var(--terracotta);min-height:120px;margin-right:20px;flex-shrink:0}
+.c38-num{font-family:var(--f-d);font-size:clamp(5rem,10vw,9rem);font-weight:400;line-height:1;color:var(--red);opacity:0;transform:translateY(20px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.c38-num.in{opacity:1;transform:translateY(0)}
+.c38-lbl{font-family:var(--f-m);font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--charcoal);margin-top:10px;line-height:1.9;opacity:0;transition:opacity .8s .25s var(--ease)}
+.c38-lbl.in{opacity:1}
+.c38-sub{font-family:var(--f-d);font-style:italic;font-size:1.05rem;color:var(--stone);margin-top:18px;max-width:320px;line-height:1.6;opacity:0;transition:opacity .8s .5s var(--ease)}
+.c38-sub.in{opacity:1}
+/* Image panels */
+.img-panel{width:100%;height:100%;position:relative;overflow:hidden}
+.img-panel img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center center;will-change:transform}
+.img-panel.contain img{object-fit:contain;background:var(--cream)}
+.img-panel.on-black{background:#111}
+.img-panel.on-black img{object-fit:contain}
+.img-caption{position:absolute;bottom:.9rem;left:1rem;right:1rem;font-family:var(--f-m);font-size:.36rem;letter-spacing:.06em;color:rgba(237,232,223,.55);line-height:1.6;pointer-events:none}
+.img-panel.on-black .img-caption{color:rgba(237,232,223,.45)}
+/* Inline images */
+.inline-fig{margin:1.8rem 0;max-width:400px}
+.inline-fig img{width:100%;border-radius:1px;display:block}
+.inline-fig figcaption{font-family:var(--f-m);font-size:.36rem;letter-spacing:.06em;color:var(--stone);margin-top:.5rem;line-height:1.6;opacity:.75}
+.diptych{display:flex;gap:.8rem;margin:1.8rem 0;max-width:400px}
+.diptych figure{flex:1}
+.diptych img{width:100%;aspect-ratio:1;object-fit:cover;display:block;border-radius:1px}
+.diptych figcaption{font-family:var(--f-m);font-size:.34rem;letter-spacing:.05em;color:var(--stone);margin-top:.4rem;line-height:1.5;opacity:.7}
+/* Src note */
+.src{position:absolute;bottom:1.2rem;left:1.5rem;font-family:var(--f-m);font-size:.38rem;letter-spacing:.06em;text-transform:uppercase;color:var(--stone);opacity:.5;max-width:72%;line-height:1.6}
+/* Coda */
+.coda{min-height:70dvh;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 2rem;text-align:center;border-top:1px solid var(--border)}
+.coda-inner{max-width:600px}
+.coda-inner p{font-size:1.05rem;line-height:1.8;color:var(--charcoal);margin-bottom:1.25rem}
+.coda-byline{font-family:var(--f-m);font-size:.46rem;letter-spacing:.2em;color:var(--stone);text-transform:uppercase;margin-top:2.5rem;opacity:.6}
+@media(max-width:768px){
+  .scrolly{flex-direction:column}
+  .narrative{flex:none;width:100%;order:2}
+  .sticky-stage{position:sticky;top:0;flex:none;width:100%;height:45dvh;border-left:none;border-bottom:1px solid var(--border);order:1;z-index:10}
+  .scene{min-height:65dvh;padding:8vh 1.5rem 6vh}
+  .scene p,.pull-quote{max-width:100%;font-size:.95rem}
+  .ch-div{padding:4rem 1.5rem 2rem}
+  .mi-panel{flex-direction:column;justify-content:center}
+  .mi-neg{position:static;transform:none;margin-top:1.5rem}
+  .mi-neg.in{transform:none}
+}
+</style>
+</head>
+<body>
+<div id="pb"></div>
+<div id="cite-tip"></div>
+<div class="mast" id="mast">Asia Aisle</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="hero">
+  <p class="hero-eye" id="h-eye">Pop Mart International &nbsp;·&nbsp; Brand Intelligence</p>
+  <h1 class="hero-t" id="h-t">The Feeling<br>Machine</h1>
+  <p class="hero-s" id="h-s">Pop Mart built a philosophy around the absence of story.<br>Then the story arrived anyway.</p>
+  <div class="hero-scroll">Scroll ↓</div>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION I: THE HOOK            -->
+<!-- ═══════════════════════════════ -->
+<div class="ch-div">
+  <div class="ch-n">Section I</div>
+  <div class="ch-t">The Hook</div>
+</div>
+<div class="scrolly" data-chapter="1">
+  <div class="narrative">
+
+    <div class="scene" data-viz="0">
+      <p class="scene-tag">March 25, 2026</p>
+      <p>On March 25, 2026, Pop Mart International reported the best financial year in its history. Revenue reached approximately $5.38 billion USD, a 184.7% increase over the prior year.<span class="fn" data-n="1">1</span> Net profit surged 308%.<span class="fn" data-n="1">1</span> The company had grown faster than almost any consumer brand of comparable scale anywhere in the world.</p>
+      <p>By the close of trading that week, Pop Mart's shares had fallen 31%.</p>
+      <figure class="inline-fig">
+        <img src="Labubu_Plush.jpg" alt="Labubu plush toy with jagged grin and sparkle eyes" loading="lazy" width="300" height="360">
+        <figcaption>Labubu plush toy, The Monsters series. Pop Mart, 2024. The object at the centre of a $5.4 billion business.</figcaption>
+      </figure>
+    </div>
+
+    <div class="scene" data-viz="0">
+      <p>The market was not misreading the numbers. It was reading what they contained. The Labubu character had generated approximately 40% of the company's total global revenue in 2025, up from 23% the year before.<span class="fn" data-n="1">1</span> Inventory turnover had risen to 123 days — for trend-driven goods, a signal that demand is weakening.<span class="fn" data-n="1">1</span> Management's forward guidance projected growth of just over 20% for 2026, a deceleration from 185% that the market received as a confession.<span class="fn" data-n="1">1</span></p>
+      <p>The stock's collapse wiped approximately $33 billion USD from the company's total share value over five trading sessions. It was not a verdict on the past. It was a question about the future.</p>
+    </div>
+
+    <div class="scene" data-viz="1">
+      <p>Six days before the earnings report, Pop Mart had offered its own answer. On March 19, 2026, the company and Sony Pictures confirmed that Paul King — the British filmmaker behind Paddington, Paddington 2, and Wonka — would direct a Labubu feature film.<span class="fn" data-n="2">2</span> Steven Levenson, the Tony Award-winning writer of Dear Evan Hansen, was named as co-writer.<span class="fn" data-n="2">2</span> Kasing Lung, the Hong Kong-born illustrator who created Labubu, was attached as executive producer.<span class="fn" data-n="2">2</span></p>
+      <p>Wang Ning had spent the previous five years arguing, in public and in press, that IP did not need a story to succeed. The film announcement represented the moment at which the company's governing philosophy could no longer be sustained.</p>
+    </div>
+
+  </div>
+  <div class="sticky-stage">
+    <!-- Metrics count-up -->
+    <div class="viz" id="ch1-viz-0" data-custom="mi">
+      <div class="mi-panel">
+        <div class="mi-pos-group">
+          <div class="mi-row" id="mi-r1"><div class="mi-rule"></div><div><div class="mi-val" id="mi-v1">+0%</div><div class="mi-lbl" id="mi-l1">Revenue Growth</div></div></div>
+          <div class="mi-row" id="mi-r2"><div class="mi-rule"></div><div><div class="mi-val" id="mi-v2">+0%</div><div class="mi-lbl" id="mi-l2">Net Profit</div></div></div>
+          <div class="mi-row" id="mi-r3" style="margin-bottom:0"><div class="mi-rule"></div><div><div class="mi-val" id="mi-v3" style="font-size:clamp(1.6rem,3vw,2.6rem)">+0%</div><div class="mi-lbl" id="mi-l3">Americas</div></div></div>
+        </div>
+        <div class="mi-neg" id="mi-neg">
+          <div class="mi-neg-rule"></div>
+          <div><div class="mi-neg-num" id="mi-nv">−0%</div>
+          <div class="mi-neg-lbl">March 25, 2026 &nbsp;·&nbsp; One Session</div>
+          <div class="mi-neg-2" id="mi-n2">−$33B Market Value</div></div>
+        </div>
+      </div>
+      <div class="src">Pop Mart Annual Results 2025, HKEX</div>
+    </div>
+    <!-- Rorschach -->
+    <div class="viz" id="ch1-viz-1" data-custom="rk">
+      <div class="rk-panel">
+        <svg id="rk-svg" class="rk-svg" viewBox="0 0 300 300" style="max-height:52dvh;width:min(280px,80%)">
+          <defs><filter id="ink"><feGaussianBlur stdDeviation="1.8" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter></defs>
+          <g filter="url(#ink)" fill="#2A2520">
+            <ellipse cx="150" cy="155" rx="22" ry="68" opacity=".92"/>
+            <path d="M155 118 C172 94 212 76 238 96 C256 112 250 146 226 158 C210 166 184 158 162 148Z" opacity=".88"/>
+            <path d="M145 118 C128 94 88 76 62 96 C44 112 50 146 74 158 C90 166 116 158 138 148Z" opacity=".88"/>
+            <path d="M158 102 C170 80 196 70 206 82 C214 92 202 112 180 118Z" opacity=".72"/>
+            <path d="M142 102 C130 80 104 70 94 82 C86 92 98 112 120 118Z" opacity=".72"/>
+            <ellipse cx="218" cy="86" rx="14" ry="20" opacity=".5" transform="rotate(-22 218 86)"/>
+            <ellipse cx="82" cy="86" rx="14" ry="20" opacity=".5" transform="rotate(22 82 86)"/>
+            <path d="M162 192 C176 214 208 228 228 218 C244 210 242 194 226 186 C212 180 186 184 168 190Z" opacity=".82"/>
+            <path d="M138 192 C124 214 92 228 72 218 C56 210 58 194 74 186 C88 180 114 184 132 190Z" opacity=".82"/>
+            <path d="M166 224 C182 242 204 248 212 238 C218 230 208 218 192 216Z" opacity=".62"/>
+            <path d="M134 224 C118 242 96 248 88 238 C82 230 92 218 108 216Z" opacity=".62"/>
+            <circle cx="172" cy="145" r="16" opacity=".38"/>
+            <circle cx="128" cy="145" r="16" opacity=".38"/>
+            <ellipse cx="150" cy="152" rx="18" ry="42" opacity=".42"/>
+          </g>
+        </svg>
+        <div class="rk-labels" id="rk-labels">
+          <div class="rk-label">NO BACKSTORY</div>
+          <div class="rk-label">NO WORLD</div>
+          <div class="rk-label">NO ARC</div>
+          <div class="rk-period">2010 — 2024</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION II: THE CONTEXT        -->
+<!-- ═══════════════════════════════ -->
+<div class="ch-div"><div class="ch-n">Section II</div><div class="ch-t">The Context</div></div>
+<div class="scrolly" data-chapter="2">
+  <div class="narrative">
+
+    <div class="scene" data-viz="sa">
+      <p class="scene-tag">2010 – 2016</p>
+      <p>Wang Ning did not set out to build a company whose business model rested on characters deliberately stripped of story. He set out to build something like LOG-ON, the Hong Kong retail chain he encountered in 2010. LOG-ON mixed toys, cosmetics, and stationery in a format that felt unlike any retail he had seen in Beijing. He returned and opened Pop Mart, initially a general-format lifestyle store that sold, among other things, imported collectibles.</p>
+      <p>The pivot to character IP came not from philosophy but from data. In 2015, Wang Ning noticed that Sonny Angel — a small palm-sized figurine of a cherubic child with angel wings produced in dozens of themed variations and sold as a series — was generating approximately 30% of Pop Mart's total revenue from a single display in one of his Beijing stores.<span class="fn" data-n="4">4</span> He approached the Japanese distributor about an exclusive arrangement. The response was a refusal.</p>
+      <figure class="inline-fig">
+        <img src="SONNY_ANGEL_STRAWBERRY.png" alt="Sonny Angel Strawberry figurine, front and back" loading="lazy" width="360" height="200">
+        <figcaption>Sonny Angel Strawberry figurine, front and back. Dream Works Co., Ltd., 2021. The back view shows what the product is without its costume.</figcaption>
+      </figure>
+    </div>
+
+    <div class="scene" data-viz="0">
+      <p>The dependence on a single licensed character Pop Mart did not own nearly ended the company. Wang Ning needed an immediate replacement: visually distinctive, legally owned, requiring no deep narrative development. In 2016, he flew to Hong Kong to sign Kenny Wong, a designer whose Molly character — a wide-eyed girl with a pursed expression — had been selling in limited editions in the designer toy market.<span class="fn" data-n="4">4</span> Molly had no backstory, no officially established personality, no official history. Wang Ning did not consider this a deficiency. He considered it a feature.</p>
+      <p>The "no story needed" philosophy was publicly codified between 2020 and 2021. Wang Ning's formulation, as recorded by Jiemian News in 2020, was that "IP doesn't need a story because everyone can project their own story onto it."<span class="fn" data-n="5">5</span> The formulation was not dishonest. But it also rationalized, with considerable elegance, an organizational constraint: Pop Mart had no narrative production capability at all.</p>
+    </div>
+
+    <div class="scene" data-viz="arc">
+      <p>Somewhere in that arc, the absence of story became a philosophy.</p>
+      <p>Wang Ning had not designed a company around the principle that characters should have no stories. He had signed a character that happened to have no story and watched it succeed. Then he reasoned backward to a philosophy that explained it.</p>
+      <div class="pull-quote">The less a character meant, the more it could mean.</div>
+      <p>When 36Kr reported in early 2026 that Pop Mart's internal animation effort had "ended without results,"<span class="fn" data-n="6">6</span> the finding confirmed what the organizational chart had always implied: the company was a product company, not a storytelling studio, and the distinction was organizational, not temporary.</p>
+    </div>
+
+    <div class="scene" data-viz="molly">
+      <p>By 2025, Pop Mart's portfolio had expanded well beyond Molly. Six character families each generated more than $275 million in annual revenue, led by SKULLPANDA and CRYBABY — a teardrop-faced figure that had become a breakout hit across Asia.<span class="fn" data-n="4">4</span> Each character was visually distinctive but narratively empty.</p>
+      <div class="diptych">
+        <figure><img src="CRYBABY.jpg" alt="CRYBABY figure with oversized frozen blue tears" loading="lazy" width="300" height="300"><figcaption>CRYBABY. Pop Mart, 2021.</figcaption></figure>
+        <figure><img src="SKULLPANDA.jpeg" alt="SKULLPANDA in red racing outfit" loading="lazy" width="300" height="300"><figcaption>SKULLPANDA. Pop Mart, 2024.</figcaption></figure>
+      </div>
+      <p>The company operated more than 630 retail stores and 2,600 robotic vending machines across dozens of countries. Gross margins exceeded 72%.<span class="fn" data-n="1">1</span> It was a high-margin consumer business whose founding philosophy had been born from a licensing crisis, rationalized after the fact, and never tested against the question it would eventually have to answer: what happens when blankness is not enough?</p>
+    </div>
+
+  </div>
+  <div class="sticky-stage">
+    <!-- Sonny Angel single figure -->
+    <div class="viz" id="ch2-viz-sa">
+      <div class="img-panel contain" data-parallax="giant" style="background:#111">
+        <img src="sonnyangel1.png" alt="Single Sonny Angel bunny figure on black background">
+        <div class="img-caption">Sonny Angel. Dream Works Co., Ltd. One figure. One costume. No story. No face worth remembering.<br>This is the object that nearly saved Pop Mart — and the model it replicated.</div>
+      </div>
+    </div>
+    <!-- Origin timeline -->
+    <div class="viz" id="ch2-viz-0">
+      <svg viewBox="0 0 460 310" xmlns="http://www.w3.org/2000/svg" style="max-height:85dvh;width:100%">
+        <defs>
+          <clipPath id="sa-clip"><rect x="120" y="18" width="80" height="120"/></clipPath>
+          <clipPath id="mo-clip"><rect x="292" y="18" width="80" height="120"/></clipPath>
+          <linearGradient id="img-fade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="70%" stop-color="white" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#EDE8DF" stop-opacity="1"/>
+          </linearGradient>
+          <mask id="sa-fade"><rect x="120" y="18" width="80" height="120" fill="white"/><rect x="120" y="18" width="80" height="120" fill="url(#img-fade)"/></mask>
+          <mask id="mo-fade"><rect x="292" y="18" width="80" height="120" fill="white"/><rect x="292" y="18" width="80" height="120" fill="url(#img-fade)"/></mask>
+        </defs>
+        <image class="sf" href="SONNY_ANGEL_STRAWBERRY.png" x="80" y="18" width="160" height="120" preserveAspectRatio="xMidYMid meet" clip-path="url(#sa-clip)" mask="url(#sa-fade)" style="mix-blend-mode:multiply"/>
+        <image class="sf" href="MOLLY.jpg" x="252" y="18" width="160" height="120" preserveAspectRatio="xMidYMid meet" clip-path="url(#mo-clip)" mask="url(#mo-fade)" style="mix-blend-mode:multiply"/>
+        <line class="sf" x1="160" y1="138" x2="160" y2="178" stroke="#D4CEC4" stroke-width="1" stroke-dasharray="2 3"/>
+        <line class="sf" x1="332" y1="138" x2="332" y2="178" stroke="#D4CEC4" stroke-width="1" stroke-dasharray="2 3"/>
+        <line class="sl" x1="42" y1="185" x2="420" y2="185" stroke="#D4CEC4" stroke-width="1.5" pathLength="1"/>
+        <circle class="ss" cx="72" cy="185" r="6" fill="#2A2520"/>
+        <text class="sf" x="72" y="170" text-anchor="middle" font-size="9" letter-spacing="1.5" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace">2010</text>
+        <text class="se" x="72" y="204" text-anchor="middle" font-size="7.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">POP MART</text>
+        <text class="se" x="72" y="215" text-anchor="middle" font-size="7.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">OPENS</text>
+        <circle class="ss" cx="160" cy="185" r="6" fill="#2A2520"/>
+        <text class="sf" x="160" y="170" text-anchor="middle" font-size="9" letter-spacing="1.5" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace">2015</text>
+        <text class="se" x="160" y="204" text-anchor="middle" font-size="7.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">SONNY ANGEL</text>
+        <text class="se" x="160" y="215" text-anchor="middle" font-size="7.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">LICENSED</text>
+        <circle class="ss" cx="240" cy="185" r="7" fill="#EDE8DF" stroke="#8C7B6B" stroke-width="1.5"/>
+        <text class="sf" x="240" y="170" text-anchor="middle" font-size="9" letter-spacing="1.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">2015</text>
+        <text class="se" x="240" y="204" text-anchor="middle" font-size="7.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">LICENSE</text>
+        <text class="se" x="240" y="215" text-anchor="middle" font-size="7.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">PULLED</text>
+        <text class="sr" x="240" y="148" text-anchor="middle" font-size="7" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace">NEAR FAILURE</text>
+        <line class="sf" x1="240" y1="151" x2="240" y2="178" stroke="#D4CEC4" stroke-width="1" stroke-dasharray="2 2"/>
+        <circle class="ss" cx="332" cy="185" r="6" fill="#2A2520"/>
+        <text class="sf" x="332" y="170" text-anchor="middle" font-size="9" letter-spacing="1.5" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace">2016</text>
+        <text class="se" x="332" y="204" text-anchor="middle" font-size="7.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">MOLLY</text>
+        <text class="se" x="332" y="215" text-anchor="middle" font-size="7.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">SIGNED</text>
+        <circle class="ss" cx="410" cy="185" r="7" fill="#E8192C"/>
+        <text class="sf" x="410" y="170" text-anchor="middle" font-size="9" letter-spacing="1.5" fill="#E8192C" style="font-family:'IBM Plex Mono',monospace">2020</text>
+        <text class="se" x="410" y="204" text-anchor="middle" font-size="7.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">IPO</text>
+        <text class="se" x="410" y="215" text-anchor="middle" font-size="7.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">$10B</text>
+        <text class="sr" x="230" y="275" text-anchor="middle" font-size="7.5" letter-spacing="2.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">THE ORIGIN ARC</text>
+      </svg>
+    </div>
+    <!-- Rationalization arc -->
+    <div class="viz" id="ch2-viz-arc">
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" style="max-height:85dvh;width:min(340px,90%)">
+        <rect class="sr" x="60" y="20" width="220" height="56" fill="#EDE8DF" stroke="#D4CEC4" stroke-width="1.5" rx="2"/>
+        <text class="sf" x="170" y="45" text-anchor="middle" font-size="8" letter-spacing="2.5" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">ACCIDENTAL CONSTRAINT</text>
+        <text class="sf" x="170" y="62" text-anchor="middle" font-size="8" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">Molly had no story: designer, not storyteller</text>
+        <line class="sl" x1="170" y1="76" x2="170" y2="100" stroke="#D4CEC4" stroke-width="1" pathLength="1"/>
+        <polygon class="sf" points="163,98 177,98 170,106" fill="#D4CEC4"/>
+        <rect class="sr" x="60" y="106" width="220" height="56" fill="#EDE8DF" stroke="#D4CEC4" stroke-width="1.5" rx="2"/>
+        <text class="sf" x="170" y="131" text-anchor="middle" font-size="8" letter-spacing="2.5" fill="#2A2520" style="font-family:'IBM Plex Mono',monospace">WORKING PRODUCT</text>
+        <text class="sf" x="170" y="148" text-anchor="middle" font-size="8" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">Watched it succeed. Did not explain it.</text>
+        <line class="sl" x1="170" y1="162" x2="170" y2="186" stroke="#D4CEC4" stroke-width="1" pathLength="1"/>
+        <polygon class="sf" points="163,184 177,184 170,192" fill="#D4CEC4"/>
+        <rect class="sr" x="60" y="192" width="220" height="56" fill="#EDE8DF" stroke="#8C7B6B" stroke-width="1.5" rx="2"/>
+        <text class="sf" x="170" y="217" text-anchor="middle" font-size="8" letter-spacing="2.5" fill="#2A2520" style="font-family:'IBM Plex Mono',monospace">POST-HOC THEORY</text>
+        <text class="sf" x="170" y="234" text-anchor="middle" font-size="8" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">Blankness = projectable emotional vessel</text>
+        <line class="sl" x1="170" y1="248" x2="170" y2="272" stroke="#2A2520" stroke-width="1" pathLength="1"/>
+        <polygon class="sf" points="163,270 177,270 170,278" fill="#2A2520"/>
+        <rect class="sr" x="60" y="278" width="220" height="56" fill="#EDE8DF" stroke="#E8192C" stroke-width="1.5" rx="2"/>
+        <text class="sf" x="170" y="303" text-anchor="middle" font-size="8" letter-spacing="2.5" fill="#E8192C" style="font-family:'IBM Plex Mono',monospace">BRAND PHILOSOPHY</text>
+        <text class="sf" x="170" y="320" text-anchor="middle" font-size="8" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">Presented to investors as deliberate strategy</text>
+        <text class="sr" x="170" y="358" text-anchor="middle" font-size="8" fill="#8C7B6B" font-style="italic" style="font-family:'Instrument Serif',serif">Reasoned backward. Never tested forward.</text>
+      </svg>
+    </div>
+    <!-- Molly portrait -->
+    <div class="viz" id="ch2-viz-molly">
+      <div class="img-panel contain" data-parallax="portrait">
+        <img src="MOLLY.jpg" alt="Molly x Keith Haring Pop Mart figure in space suit">
+        <div class="img-caption" style="color:var(--stone)">Molly × Keith Haring. Pop Mart, 2022. The blank face carrying someone else's meaning.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION III: THE MOVE          -->
+<!-- ═══════════════════════════════ -->
+<div class="ch-div"><div class="ch-n">Section III</div><div class="ch-t">The Move</div></div>
+<div class="scrolly" data-chapter="3">
+  <div class="narrative">
+
+    <div class="scene" data-viz="lung">
+      <p class="scene-tag">March 19, 2026</p>
+      <p>Pop Mart's internal animation effort failed. That failure is what the Sony/Paul King announcement was built to address, and what makes it strategy rather than entertainment.</p>
+      <p>The choice of King is worth examining in detail. His three completed features are Paddington (2014), Paddington 2 (2017), and Wonka (2023). Each was built on IP carrying decades of accumulated audience expectation. The belonging anxiety that drives the first Paddington film is not in Bond's novels. King located it inside the IP, in latent form, and built the film around it. He then deepened it in the sequel: Paddington 2 is about goodness being punished by a cynical world. Wonka found a different character inside Roald Dahl's material: a young man who believes in the impossible and chooses to believe anyway despite the world punishing him for it.</p>
+      <p>The pattern is consistent. King does not adapt source material. He interrogates it for the wound — the character's central unresolved emotional problem the source material has not yet named — and builds the film around healing that wound.</p>
+    </div>
+
+    <div class="scene" data-viz="lung">
+      <p>Kasing Lung's picture books contain the seed. Labubu is a forest creature who is mischievous but kind-hearted, capable of unintentional harm, permanently hovering between monster and friend. The character wants to belong and keeps failing to belong. The gap between intention and effect is already there. King's task is activation, not invention.</p>
+      <p>What is not confirmed is the governance of the creative process. It is unknown what creative approval rights Pop Mart retains over the script or the emotional proposition King constructs. Pop Mart's COO Si De stated in 2025 that "movies are not Pop Mart's goal" — a framing that suggests the company views the film primarily as a commercial event built around an existing brand rather than as a commitment to building a narrative franchise. The announcement leaves that question open.</p>
+    </div>
+
+    <div class="scene" data-viz="asm">
+      <p>Pop Mart's design pipeline moves a character from initial sketch to finished product on a timeline most toy companies cannot match. The process is modular: a character's base sculpt is developed as a three-dimensional mold, then multiplied across color variations, accessories, and seasonal themes. New series can reach shelves within weeks of concept approval.</p>
+      <p>But the pipeline produces objects. Every stage is concerned with how a character looks, not what it is. Pop Mart's Chief Marketing Officer described the company's brand strategy in terms of four pillars: product design, retail experience, community engagement, and global expansion. None of them is narrative.</p>
+    </div>
+
+  </div>
+  <div class="sticky-stage">
+    <!-- Kasing Lung portrait -->
+    <div class="viz" id="ch3-viz-lung">
+      <div class="img-panel" data-parallax="portrait">
+        <img src="LUNG_KAISING.jpg" alt="Kasing Lung holding a grey monster figure at eye level">
+        <div class="img-caption">Kasing Lung with a figure from The Monsters series. South China Morning Post, 2023.<br>The creator and the creation. The gap between what Lung saw in this figure and what Pop Mart chose to sell is the piece's central argument.</div>
+      </div>
+    </div>
+    <!-- Assembly line -->
+    <div class="viz" id="ch3-viz-asm" data-custom="assembly">
+      <div class="asm-wrap">
+        <p class="asm-title">The design pipeline — every stage asks the same question</p>
+        <div class="asm-belt" id="asm-belt">
+          <div class="asm-station" style="transition-delay:.05s"><div class="asm-fig"><svg viewBox="0 0 60 80" width="52" height="70"><ellipse cx="30" cy="36" rx="18" ry="22" fill="none" stroke="#2A2520" stroke-width="1.5" stroke-dasharray="2 2"/><circle cx="22" cy="30" r="4" fill="none" stroke="#2A2520" stroke-width="1"/><circle cx="38" cy="30" r="4" fill="none" stroke="#2A2520" stroke-width="1"/><path d="M18,44 Q30,52 42,44" fill="none" stroke="#2A2520" stroke-width="1"/><ellipse cx="30" cy="62" rx="10" ry="14" fill="none" stroke="#2A2520" stroke-width="1.5" stroke-dasharray="2 2"/></svg></div><div class="asm-stage">CONCEPT</div><div class="asm-q">How does<br>it look?</div></div>
+          <div class="asm-arrow">›</div>
+          <div class="asm-station" style="transition-delay:.15s"><div class="asm-fig"><svg viewBox="0 0 60 80" width="52" height="70"><ellipse cx="30" cy="36" rx="18" ry="22" fill="#D4CEC4"/><circle cx="22" cy="30" r="5" fill="#2A2520"/><circle cx="38" cy="30" r="5" fill="#2A2520"/><path d="M20,44 L18,50 Q30,56 42,50 L40,44" fill="#2A2520"/><ellipse cx="30" cy="63" rx="10" ry="14" fill="#D4CEC4"/></svg></div><div class="asm-stage">SCULPT</div><div class="asm-q">How does<br>it look?</div></div>
+          <div class="asm-arrow">›</div>
+          <div class="asm-station" style="transition-delay:.25s"><div class="asm-fig"><svg viewBox="0 0 60 80" width="52" height="70"><ellipse cx="30" cy="36" rx="18" ry="22" fill="#B8B0A6"/><circle cx="22" cy="30" r="5" fill="#2A2520"/><circle cx="38" cy="30" r="5" fill="#2A2520"/><path d="M20,44 L18,50 Q30,56 42,50 L40,44" fill="#2A2520"/><ellipse cx="30" cy="63" rx="10" ry="14" fill="#B8B0A6"/></svg></div><div class="asm-stage">MOLD</div><div class="asm-q">How does<br>it look?</div></div>
+          <div class="asm-arrow">›</div>
+          <div class="asm-station" style="transition-delay:.35s"><div class="asm-fig"><svg viewBox="0 0 60 80" width="52" height="70"><ellipse cx="30" cy="36" rx="18" ry="22" fill="#C4613A"/><circle cx="22" cy="30" r="5" fill="#2A2520"/><circle cx="38" cy="30" r="5" fill="#2A2520"/><path d="M20,44 L18,50 Q30,56 42,50 L40,44" fill="#2A2520"/><ellipse cx="30" cy="63" rx="10" ry="14" fill="#C4613A"/></svg></div><div class="asm-stage">COLORWAY</div><div class="asm-q">How does<br>it look?</div></div>
+          <div class="asm-arrow">›</div>
+          <div class="asm-station" style="transition-delay:.45s"><div class="asm-fig"><svg viewBox="0 0 60 80" width="52" height="70"><rect x="8" y="20" width="44" height="52" rx="3" fill="#2A2520"/><rect x="11" y="23" width="38" height="46" rx="2" fill="#EDE8DF" opacity=".12"/><text x="30" y="50" text-anchor="middle" font-size="7" fill="#EDE8DF" opacity=".5" style="font-family:'IBM Plex Mono',monospace">?</text><rect x="20" y="14" width="20" height="10" rx="1" fill="#2A2520"/></svg></div><div class="asm-stage">PACKAGED</div><div class="asm-q">How does<br>it look?</div></div>
+        </div>
+        <div class="asm-final-q" id="asm-fq">
+          <p>What is it?</p>
+          <span>The pipeline never asked.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION IV: THE MECHANISM      -->
+<!-- ═══════════════════════════════ -->
+<div class="ch-div"><div class="ch-n">Section IV</div><div class="ch-t">The Mechanism</div></div>
+<div class="scrolly" data-chapter="4">
+  <div class="narrative">
+
+    <div class="scene" data-viz="lisa">
+      <p class="scene-tag">April 2024</p>
+      <p>Pop Mart's actual competitive advantage sits beneath the blind box format and the collectible scarcity: the company's demonstrated ability to export a feeling without explaining it.</p>
+      <p>Pop Mart succeeded in the United States not because Labubu is culturally neutral but because the company engineered a specific kind of cultural decoupling. Consumers in the United States who purchased Labubu in 2024 and 2025 did not do so because they understood or valued Labubu's cultural origins. Field research conducted outside Pop Mart's Manhattan flagship store found no evidence of the Guochao hypothesis — that US consumers were purchasing Labubu as an active expression of engagement with Chinese culture specifically. What the interviews found instead was an access-as-status dynamic: Labubu as an affordable entry point into the kind of consumption associated with taste and cultural awareness.</p>
+    </div>
+
+    <div class="scene" data-viz="lisa">
+      <p>This is a contemporary version of the Lipstick Effect: the pattern by which affordable luxury items capture spending when larger luxuries are out of reach. Pop Mart did not create a luxury object. It created an accessible luxury display, priced at a point where the cost of acquisition was low enough to permit impulsive purchase and high enough to register as a considered one.</p>
+      <p>What Pop Mart has never needed to determine is which type of consumer is buying — the mechanic-loyal keeper (drawn by the variable reward of the blind box) or the character-loyal keeper (with a specific emotional relationship with Labubu). The figure worked for both. The feeling was delivered without requiring that the company understand what, precisely, the consumer was feeling.</p>
+      <p>A film cannot operate on that basis. A film must commit to a specific emotional proposition and hold it for ninety minutes.</p>
+    </div>
+
+    <div class="scene" data-viz="aud">
+      <p>The audience that arrived with the Labubu surge was new to Pop Mart. Before the April 2024 photograph, the customer base had been predominantly male and concentrated among Chinese collectors. Within a year, global data indicated that more than 60% of buyers were now female, skewing younger and spreading well beyond Asia.<span class="fn" data-n="17">17</span> Southeast Asia, Europe, and North America became significant markets for the first time.</p>
+      <p>The speed of the transformation obscured something important about its nature. Labubu's breakout was not a product launch. Pop Mart did not engineer it, market it, or anticipate it. The audience it unlocked had no prior relationship with blind-box collecting, designer toys, or Pop Mart's existing brand identity. They were buying a plush accessory. The format was different, the customer was different, the purchase behavior was different, and the company had not changed with them.</p>
+    </div>
+
+  </div>
+  <div class="sticky-stage">
+    <!-- Lisa photograph -->
+    <div class="viz" id="ch4-viz-lisa">
+      <div class="img-panel" data-parallax="portrait">
+        <img src="Lisa.jpg" alt="Lisa of BLACKPINK holding a bag with two pink Labubu plush toys">
+        <div class="img-caption">Lisa (LALISA MANOBAL), April 2024. @lalalalisa_m / Instagram.<br>Not an advertisement. That is why it worked.</div>
+      </div>
+    </div>
+    <!-- Audience shift canvas -->
+    <div class="viz" id="ch4-viz-aud" data-custom="audienceshift" style="padding:0;overflow:hidden">
+      <canvas id="aud-canvas" style="width:100%;height:100%;display:block"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION V: THE EVIDENCE        -->
+<!-- ═══════════════════════════════ -->
+<div class="ch-div"><div class="ch-n">Section V</div><div class="ch-t">The Evidence</div></div>
+<div class="scrolly" data-chapter="5">
+  <div class="narrative">
+
+    <div class="scene" data-viz="tl">
+      <p class="scene-tag">2024 – 2026</p>
+      <p>Two facts establish the boundaries of what is known about Pop Mart's US market position.</p>
+      <p>The first is that the cultural foundation has been built. By the close of 2025, Pop Mart had opened flagship stores in New York, Los Angeles, Las Vegas, and Chicago. On November 27, 2025, Pop Mart debuted its first float in the Macy's Thanksgiving Day Parade.<span class="fn" data-n="11">11</span> In March 2026, the company announced a licensing collaboration with FIFA ahead of the World Cup.<span class="fn" data-n="12">12</span> Both moves represent a transition from viral subcultural moment to institutionalized mainstream presence.</p>
+      <p>The second fact is that the cultural momentum preceding this investment has peaked and begun to decline. Google Trends data for "Labubu" in the United States shows a sharp peak in mid-2025, followed by a decline through the remainder of the year.<span class="fn" data-n="13">13</span> The investment and the momentum are moving in opposite directions.</p>
+    </div>
+
+    <div class="scene" data-viz="ce">
+      <p>Consumer Edge transaction data show that transaction frequency per US user fell in each successive measured period through 2025, with first-time buyer volume contracting across the same window.<span class="fn" data-n="14">14</span> The blind box and the plush fashion accessory serve different consumer needs. A consumer who buys a Labubu plush charm for a handbag completes a fashion transaction. Twelve variations of the charm will not bring her back. The uncertainty-and-reward cycle that drives blind box repeat purchase does not apply to the fashion category.</p>
+      <p>Pop Mart acquired millions of US consumers during the peak of Labubu's cultural heat. The 2025 results surface the question the 2026 forecast does not answer: whether those consumers will remain engaged once the initial acquisition impulse has been satisfied.</p>
+    </div>
+
+    <div class="scene" data-viz="c38">
+      <p>One character now accounted for more than a third of all revenue. That character had a creator with a narrative vision the company had chosen not to use. And the product format that carried it had replaced the mechanical engine that had driven Pop Mart's recurring revenue since its founding.</p>
+      <p>Plush toys, which had accounted for 9.8% of revenue in 2023, reached 50.4% by the end of 2025. The Monsters IP alone generated $1.95 billion — more than the next five character families combined.<span class="fn" data-n="1">1</span></p>
+    </div>
+
+  </div>
+  <div class="sticky-stage">
+    <!-- Labubu inflection timeline -->
+    <div class="viz" id="ch5-viz-tl" data-custom="timeline" style="padding:1.5rem 1rem 2rem">
+      <svg viewBox="0 0 520 320" id="tl-svg" xmlns="http://www.w3.org/2000/svg" style="max-height:90dvh;width:100%">
+        <rect width="520" height="320" fill="#EDE8DF"/>
+        <line x1="68" y1="42" x2="510" y2="42" stroke="#8C7B6B" stroke-width="0.5" stroke-dasharray="3 6" opacity="0.3"/>
+        <text x="62" y="45" font-size="8" fill="#8C7B6B" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">40%</text>
+        <line x1="68" y1="112" x2="510" y2="112" stroke="#8C7B6B" stroke-width="0.5" stroke-dasharray="3 6" opacity="0.3"/>
+        <text x="62" y="115" font-size="8" fill="#8C7B6B" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">20%</text>
+        <line x1="68" y1="237" x2="510" y2="237" stroke="#8C7B6B" stroke-width="0.5" stroke-dasharray="3 6" opacity="0.3"/>
+        <text x="62" y="240" font-size="8" fill="#8C7B6B" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">5%</text>
+        <line x1="68" y1="272" x2="510" y2="272" stroke="#2A2520" stroke-width="1" opacity="0.25"/>
+        <text x="68"  y="288" font-size="8.5" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">2019</text>
+        <text x="142" y="288" font-size="8.5" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">2020</text>
+        <text x="215" y="288" font-size="8.5" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">2021</text>
+        <text x="289" y="288" font-size="8.5" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">2022</text>
+        <text x="363" y="288" font-size="8.5" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">2023</text>
+        <text x="436" y="288" font-size="8.5" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">2024</text>
+        <text x="510" y="288" font-size="8.5" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">2025</text>
+        <path id="tl-flat" d="M 68,237 L 461,237" fill="none" stroke="#8C7B6B" stroke-width="2.5" stroke-dasharray="400" stroke-dashoffset="400"/>
+        <path id="tl-erupt" d="M 461,237 Q 490,150 510,42" fill="none" stroke="#E8192C" stroke-width="3" stroke-dasharray="300" stroke-dashoffset="300"/>
+        <g id="tl-marker" opacity="0"><line x1="461" y1="28" x2="461" y2="272" stroke="#C4613A" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="461" cy="237" r="4" fill="#C4613A"/></g>
+        <g id="tl-annot" opacity="0"><text x="465" y="92" font-size="8" fill="#C4613A" font-weight="500" letter-spacing="1.2" style="font-family:'IBM Plex Mono',monospace">LISA POSTS</text><text x="465" y="104" font-size="8" fill="#C4613A" font-weight="500" letter-spacing="1.2" style="font-family:'IBM Plex Mono',monospace">A PHOTOGRAPH</text><text x="465" y="116" font-size="8" fill="#8C7B6B" letter-spacing="0.8" style="font-family:'IBM Plex Mono',monospace">APRIL 2024</text></g>
+        <circle id="tl-dot" cx="510" cy="42" r="6" fill="#E8192C" opacity="0" style="transform-origin:510px 42px;transform:scale(0)"/>
+        <g id="tl-term" opacity="0"><text x="498" y="28" font-size="14" fill="#E8192C" font-weight="400" text-anchor="end" style="font-family:'Instrument Serif',serif">38%</text><text x="498" y="16" font-size="7.5" fill="#2A2520" font-weight="500" letter-spacing="1.2" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">ONE CHARACTER</text><text x="498" y="7" font-size="7.5" fill="#2A2520" font-weight="500" letter-spacing="1.2" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">38% OF ALL REVENUE</text></g>
+        <text x="72" y="312" font-size="7.5" fill="#8C7B6B" opacity="0.65" style="font-family:'IBM Plex Mono',monospace">* Pre-2024 values indicative · 2025 per HKEX annual filing</text>
+      </svg>
+    </div>
+    <!-- Consumer Edge decline -->
+    <div class="viz" id="ch5-viz-ce" style="padding:2rem 2.5rem">
+      <div class="ce-wrap">
+        <p class="ce-title">US Transaction Volume — Pop Mart, 2025</p>
+        <p class="ce-note">Consumer Edge credit/debit analytics · October 2025</p>
+        <svg viewBox="0 0 480 240" id="ce-svg" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:55dvh">
+          <rect width="480" height="240" fill="#EDE8DF"/>
+          <line x1="52" y1="20" x2="52" y2="200" stroke="#2A2520" stroke-width="1" opacity=".2"/>
+          <line x1="52" y1="200" x2="460" y2="200" stroke="#2A2520" stroke-width="1" opacity=".2"/>
+          <text x="46" y="24" font-size="8" fill="#8C7B6B" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">HIGH</text>
+          <text x="46" y="200" font-size="8" fill="#8C7B6B" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">LOW</text>
+          <text x="52"  y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">J</text>
+          <text x="89"  y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">F</text>
+          <text x="126" y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">M</text>
+          <text x="163" y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">A</text>
+          <text x="200" y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">M</text>
+          <text x="237" y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">J</text>
+          <text x="274" y="214" font-size="8" fill="#E8192C" text-anchor="middle" font-weight="500" style="font-family:'IBM Plex Mono',monospace">J</text>
+          <text x="311" y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">A</text>
+          <text x="348" y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">S</text>
+          <text x="385" y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">O</text>
+          <text x="422" y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">N</text>
+          <text x="460" y="214" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">D</text>
+          <text x="256" y="226" font-size="8" fill="#8C7B6B" text-anchor="middle" letter-spacing="1.2" style="font-family:'IBM Plex Mono',monospace">2025</text>
+          <line x1="52" y1="128" x2="460" y2="128" stroke="#C4613A" stroke-width="1" stroke-dasharray="3 5" opacity=".55"/>
+          <text x="462" y="131" font-size="7" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace">50%</text>
+          <path id="ce-line" d="M52,148 L89,142 L126,136 L163,122 L200,92 L237,42 L274,50 L311,80 L348,108 L385,128 L422,140 L460,148" fill="none" stroke="#E8192C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="800" stroke-dashoffset="800"/>
+          <g id="ce-peak-annot" opacity="0"><line x1="237" y1="42" x2="237" y2="28" stroke="#C4613A" stroke-width="1" stroke-dasharray="2 2"/><text x="237" y="22" font-size="7.5" fill="#C4613A" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">PEAK</text><text x="237" y="13" font-size="7" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">JUN / JUL 2025</text></g>
+          <g id="ce-fall-annot" opacity="0"><text x="370" y="100" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">CONSECUTIVE</text><text x="370" y="111" font-size="7.5" fill="#8C7B6B" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">MONTHLY DECLINE</text><text x="393" y="145" font-size="7" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace">←first-time buyers &lt;50%</text></g>
+        </svg>
+        <p class="ce-src">Consumer Edge Insight Flash (October 2025) · Google Trends · Box Office Mojo</p>
+      </div>
+    </div>
+    <!-- 38% callout -->
+    <div class="viz" id="ch5-viz-c38" data-custom="callout38">
+      <div class="c38"><div class="c38-rule"></div><div>
+        <div class="c38-num" id="c38-num">38%</div>
+        <div class="c38-lbl" id="c38-lbl">One Character<br>$1.95 Billion<br>Full Year 2025</div>
+        <div class="c38-sub" id="c38-sub">More than the next five character families combined — and a creator whose story the company had chosen not to tell.</div>
+      </div></div>
+      <div class="src">Pop Mart Annual Results 2025 · HKEX (March 25, 2026)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- INTERLUDE                      -->
+<!-- ═══════════════════════════════ -->
+<div class="ch-interlude">
+  <div class="ch-interlude-label">Interlude</div>
+  <div class="ch-interlude-t">The Beanie Baby and the Blank Face</div>
+</div>
+<div class="scrolly" data-chapter="6">
+  <div class="narrative">
+
+    <div class="scene" data-viz="shimizu">
+      <p class="scene-tag">1993 – 1999</p>
+      <p>Beanie Babies peaked at approximately $1.4 billion in annual revenue in 1999 and left no lasting franchise. Hello Kitty has generated an estimated $80 billion in lifetime retail revenue across fifty years. Both ran on the same blankness. The difference was organizational.</p>
+      <p>Ty Warner managed supply by periodically retiring specific models, using artificial scarcity to drive a secondary market in which individual animals traded for hundreds of dollars. When Warner decided to capture the demand that scarcity had created, he flooded the market. The secondary market collapsed. By 2001, the cultural moment had passed entirely.</p>
+      <figure class="inline-fig">
+        <img src="BEANIE_BABY.jpg" alt="Purple Princess Beanie Baby bear with white rose and heart tag" loading="lazy" width="300" height="300">
+        <figcaption>Ty "Princess" bear. Ty Inc., 1997. Peak price: hundreds of dollars. Two years later: worthless.</figcaption>
+      </figure>
+    </div>
+
+    <div class="scene" data-viz="shimizu">
+      <p class="scene-tag">1974 – present</p>
+      <p>Hello Kitty, created by Sanrio in 1974, has no mouth, no official backstory, and no official personality beyond the descriptor "kind." Sanrio commissioned a young designer named Yuko Shimizu to create a character for a line of coin purses. Shimizu has said she did not draw a mouth because she wanted the character's expression to reflect the viewer's mood.</p>
+      <figure class="inline-fig">
+        <img src="HELLO_KITTY.jpg" alt="Hello Kitty illustration — white cat with pink bow and no mouth" loading="lazy" width="220" height="220" style="max-width:200px">
+        <figcaption>Hello Kitty. Sanrio Co., Ltd., 1974. Fifty years. No mouth.</figcaption>
+      </figure>
+      <p>What Sanrio built, over five decades, was a licensing network of extraordinary breadth: more than 1,700 active licensees across 109 countries. The blankness works because the network makes the character inescapable. Ty Warner built inventory. Sanrio built permanence.</p>
+    </div>
+
+    <div class="scene" data-viz="traj">
+      <p>The parallel to Pop Mart is uncomfortably precise. Pop Mart's production increase from 300,000 plush units per month to an estimated 30 million per month in under two years is, in its commercial logic, closer to Ty Warner's decision to flood the market than to Sanrio's patient expansion. The company's revenue concentration in a single character, the declining first-time buyer rate, and the erosion of resale premiums are the early indicators of the same curve Beanie Babies traced.</p>
+      <p>The film, if it works, is the intervention that could bend the trajectory from Ty Warner's path toward Sanrio's. If it does not work, the inventory has already been built.</p>
+    </div>
+
+  </div>
+  <div class="sticky-stage">
+    <!-- Yuko Shimizu portrait -->
+    <div class="viz" id="ch6-viz-shimizu">
+      <div class="img-panel" data-parallax="portrait">
+        <img src="YUKO_SHIMIZU.jpg" alt="Yuko Shimizu photographed against red background with Hello Kitty badge">
+        <div class="img-caption">Yuko Shimizu, designer of Hello Kitty, photographed in Tokyo. Noel Celis / AFP, 2014.<br>The person who drew the no-mouth. A specific human being, a specific choice, a fifty-year philosophy.</div>
+      </div>
+    </div>
+    <!-- Three trajectories -->
+    <div class="viz" id="ch6-viz-traj" data-custom="traj" style="padding:1.5rem 1rem 2rem">
+      <svg viewBox="0 0 530 340" id="traj-svg" xmlns="http://www.w3.org/2000/svg" style="max-height:90dvh;width:100%">
+        <rect width="530" height="340" fill="#EDE8DF"/>
+        <line x1="52" y1="290" x2="502" y2="290" stroke="#2A2520" stroke-width="1" opacity="0.25"/>
+        <text x="52"  y="306" font-size="8" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">1974</text>
+        <text x="216" y="306" font-size="8" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">1993</text>
+        <text x="260" y="306" font-size="8" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">1999</text>
+        <text x="399" y="306" font-size="8" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">2020</text>
+        <text x="502" y="306" font-size="8.5" fill="#E8192C" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">2026</text>
+        <line x1="502" y1="288" x2="502" y2="293" stroke="#E8192C" stroke-width="1.5"/>
+        <text x="14" y="200" font-size="7.5" fill="#8C7B6B" font-weight="500" letter-spacing="1.4" text-anchor="middle" transform="rotate(-90 14 200)" style="font-family:'IBM Plex Mono',monospace">RELATIVE COMMERCIAL MOMENTUM</text>
+        <text x="16" y="92" font-size="8" fill="#8C7B6B" letter-spacing="1" text-anchor="middle" transform="rotate(-90 16 92)" style="font-family:'IBM Plex Mono',monospace">HELLO KITTY</text>
+        <text x="16" y="193" font-size="8" fill="#C4613A" letter-spacing="1" text-anchor="middle" transform="rotate(-90 16 193)" style="font-family:'IBM Plex Mono',monospace">BEANIE BABIES</text>
+        <text x="16" y="270" font-size="8" fill="#E8192C" letter-spacing="1" text-anchor="middle" transform="rotate(-90 16 270)" style="font-family:'IBM Plex Mono',monospace">POP MART</text>
+        <path id="traj-hk" d="M 52,270 C 200,265 380,220 502,140" fill="none" stroke="#8C7B6B" stroke-width="2.5" stroke-dasharray="600" stroke-dashoffset="600"/>
+        <text id="traj-hk-end" x="506" y="138" font-size="8" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace;opacity:0">→</text>
+        <text id="traj-hk-lbl" x="56" y="258" font-size="8" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace;opacity:0">Hello Kitty (1974)</text>
+        <path id="traj-bb" d="M 216,270 L 238,200 L 260,52 L 277,295" fill="none" stroke="#C4613A" stroke-width="2.5" stroke-dasharray="500" stroke-dashoffset="500"/>
+        <text id="traj-bb-lbl" x="220" y="260" font-size="8" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace;opacity:0">Beanie Babies (1993)</text>
+        <text id="traj-bb-peak" x="264" y="48" font-size="7.5" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace;opacity:0">~$1.4B peak</text>
+        <text id="traj-bb-end" x="280" y="284" font-size="7.5" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace;opacity:0">Collapse</text>
+        <path id="traj-pm" d="M 399,270 Q 445,160 480,82" fill="none" stroke="#E8192C" stroke-width="3" stroke-dasharray="300" stroke-dashoffset="300"/>
+        <text id="traj-pm-lbl" x="402" y="262" font-size="8" fill="#E8192C" font-weight="500" style="font-family:'IBM Plex Mono',monospace;opacity:0">Pop Mart (2020)</text>
+        <g id="traj-qmark" style="opacity:0">
+          <circle cx="480" cy="82" r="5" fill="#EDE8DF" stroke="#E8192C" stroke-width="2"/>
+          <line x1="480" y1="68" x2="480" y2="48" stroke="#E8192C" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <text x="480" y="40" font-size="20" fill="#E8192C" font-weight="400" text-anchor="middle" style="font-family:'Instrument Serif',serif">?</text>
+        </g>
+        <text id="traj-verdict" x="52" y="324" font-size="10" fill="#2A2520" font-style="italic" style="font-family:'Instrument Serif',serif;opacity:0">Ty built inventory. Sanrio built permanence.</text>
+        <text x="52" y="336" font-size="7.5" fill="#8C7B6B" opacity="0.55" style="font-family:'IBM Plex Mono',monospace">* Y-axis schematic — relative commercial momentum, not revenue</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION VI: THE LIMITS         -->
+<!-- ═══════════════════════════════ -->
+<div class="ch-div"><div class="ch-n">Section VI</div><div class="ch-t">The Limits</div></div>
+<div class="scrolly" data-chapter="7">
+  <div class="narrative">
+
+    <div class="scene" data-viz="0">
+      <p class="scene-tag">Four Material Risks</p>
+      <p>The concentration risk is most immediately visible. In 2025, Labubu and the Monsters series generated approximately 40% of Pop Mart's total global revenue. No other IP is within range. The company's development process for new characters has not demonstrated the capacity to generate a successor at comparable scale.</p>
+      <p>The tariff exposure affects day-to-day costs. Pop Mart manufactures in China and exports to the United States under conditions that have become substantially more expensive since 2024. The company implemented US price increases of 80–100% in mid-2024. If the price increases beyond the "indulgent but not consequential" threshold, the access-as-status dynamic is disrupted.</p>
+    </div>
+
+    <div class="scene" data-viz="0">
+      <p>The fad cycle risk is the one the market is pricing most directly. Pop Mart's COO Si De described Labubu as riding a "seven-year tidal wave." Wang Ning's stated supply philosophy — keep the market "seven-tenths full" — acknowledges the tension between growth and scarcity preservation. It does not resolve it.</p>
+      <p>The cultural translation risk is the most relevant to the film. Pop Mart succeeded in the United States by bypassing cultural context entirely. A film asks something different. Pew Research Center's 2025 survey found 77% of US respondents holding unfavorable views of China — a measurement of broad public opinion that did not prevent Labubu from reaching mainstream US retail presence, but one that registers differently when a film carries explicit Chinese cultural authorship.<span class="fn" data-n="18">18</span></p>
+      <p>Whether Paul King's approach to Labubu will produce an emotional proposition that works for a US audience that acquired the brand as a fashion object, without any prior relationship with Kasing Lung's picture books, is not knowable in advance. Section VII establishes the odds. It cannot establish the outcome.</p>
+    </div>
+
+  </div>
+  <div class="sticky-stage">
+    <div class="viz" id="ch7-viz-0" data-custom="loopcanvas" style="padding:0;overflow:hidden">
+      <canvas id="loop-canvas" style="width:100%;height:100%;display:block"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION VII: THE PATTERN       -->
+<!-- ═══════════════════════════════ -->
+<div class="ch-div"><div class="ch-n">Section VII</div><div class="ch-t">The Pattern</div></div>
+<div class="scrolly" data-chapter="8">
+  <div class="narrative">
+
+    <div class="scene" data-viz="book">
+      <p class="scene-tag">The Analysis</p>
+      <p>The films that work follow a three-step pattern. The audience comes for the brand. The audience stays for the wound. And the audience credits the brand for the healing — not the craft of the filmmaker, but the character itself. The IP absorbs the credit. It becomes, in the audience's memory, the thing that understood something true about their life.</p>
+      <p>This study examined 35 films released between 1985 and 2024 in which the primary IP originated as a physical object and the film received a wide theatrical release. The primary corpus was confined to companion-character IP — properties designed around an emotional relationship with an individual owner or viewer. Action-figure IP and participatory-world franchises operate on different economics and are analyzed separately.</p>
+      <p>The standard assumption — that prior narrative material is the key variable — is not supported by the data. Across the companion-IP films in the corpus, the correlation between prior narrative richness and commercial returns was a coefficient of -0.06 with a p-value of 0.72. No meaningful relationship at all. Having more story behind a character predicts neither success nor failure.</p>
+    </div>
+
+    <div class="scene" data-viz="0">
+      <p>For each film in the primary corpus, this analysis applied a single binary test: can the central emotional conflict be restated in a sentence without naming the IP?</p>
+      <p>The LEGO Movie's controlling idea: a father learns that controlling a creative child is a form of withheld love. That idea requires no LEGO. Barbie's controlling idea: the standard women are asked to meet is impossible, and the impossibility is the point. That idea requires no Barbie. Sonic's controlling idea: an outsider hides his true self to avoid rejection and discovers that connection requires exposure. Sonic maintained this across three films, returning 3.8x, 3.7x, and 3.4x — remarkably stable across six years.</p>
+      <p>Garfield's controlling idea: a cat is lazy and likes lasagna. That describes a personality, not a wound. Wounds can be healed inside a film's running time. Personality traits can only be confirmed. Three films, three studios, three creative teams, across twenty years: 4.0x, 2.4x, 4.3x. The consistency suggests a fixed property of the character rather than a series of production failures.</p>
+      <p>Films that passed the irreplaceable controlling idea test achieved commercial success (2x return) in 93% of cases in this dataset. Films that failed the test achieved commercial success in 70% of cases. The difference is statistically meaningful (Mann-Whitney U, p = 0.038).</p>
+    </div>
+
+    <div class="scene" data-viz="0">
+      <p>The franchise analysis, which holds IP and budget constant, provides the more reliable evidence. Paddington and Paddington 2, both directed by Paul King with the controlling idea intact, returned 4.9x and 5.7x. Paddington in Peru (2024), directed by a different filmmaker in a structure that moved the character away from the belonging-and-outsider framework, returned 2.35x — commercially viable, but a halving of return on investment within the same franchise at a higher budget with the same core cast.</p>
+      <p>The credit transfer is why Paddington 2 outperformed Paddington 1 rather than declining, as sequels typically do. The belonging anxiety had deepened. The audience credited the bear. What Pop Mart is deciding is whether Labubu gets to be the thing the audience credits for healing them.</p>
+    </div>
+
+    <div class="scene" data-viz="pad">
+      <p>Paul King has directed three films within this analysis's scope: Paddington, Paddington 2, and Wonka. All three pass the irreplaceable controlling idea test. All three returned above 4.5x on production budget. No other director in the corpus has produced three consecutive films with irreplaceable controlling ideas. The average return across the three is 5.2x.</p>
+      <p>Labubu's central trait is mischief layered over vulnerability: a character who intends kindness and produces harm, who wants to belong and keeps failing to belong. That trait contains an accessible wound. It is, by this analysis, closer to Sonic than to Garfield. King's task is not to invent the wound. It is already in Kasing Lung's picture books. His task is activation.</p>
+      <p>The determining variable is not in the data. It is whether Pop Mart gives Paul King the latitude that Paddington Books gave Paul King: the latitude to find something true inside Labubu and refuse to subordinate it to brand management. The question, then, is not whether a Labubu film can produce a billion-dollar franchise. The question is whether the company that built a billion-dollar business by distributing a feeling it never needed to understand can, for the first time, afford to understand it.</p>
+    </div>
+
+  </div>
+  <div class="sticky-stage">
+    <!-- Monsters Trilogy book -->
+    <div class="viz" id="ch8-viz-book">
+      <div class="img-panel on-black" data-parallax="cover">
+        <img src="The_Monster_Trilogy_Book.png" alt="The Monsters Trilogy book cover — yellow with Labubu in circular forest illustration">
+        <div class="img-caption">The Monsters Trilogy by Kasing Lung. How2Work, 2015.<br>The world existed. Pop Mart spent a decade not using it.</div>
+      </div>
+    </div>
+    <!-- Scatter plot -->
+    <div class="viz" id="ch8-viz-0" data-custom="scatter" style="padding:1rem">
+      <svg viewBox="0 0 520 400" id="sc-svg" xmlns="http://www.w3.org/2000/svg" style="max-height:95dvh;width:100%">
+        <rect width="520" height="400" fill="#EDE8DF"/>
+        <line x1="58" y1="340" x2="498" y2="340" stroke="#2A2520" stroke-width="1" opacity="0.25"/>
+        <line x1="58" y1="28"  x2="58"  y2="340" stroke="#2A2520" stroke-width="1" opacity="0.25"/>
+        <line x1="84" y1="22" x2="84" y2="340" stroke="#2A2520" stroke-width="1" stroke-dasharray="4 5" opacity="0.2"/>
+        <text x="87" y="35" font-size="7.5" fill="#2A2520" opacity="0.45" style="font-family:'IBM Plex Mono',monospace">BLANK</text>
+        <text x="87" y="46" font-size="7.5" fill="#2A2520" opacity="0.45" style="font-family:'IBM Plex Mono',monospace">PAGE</text>
+        <line x1="58" y1="35" x2="498" y2="35" stroke="#8C7B6B" stroke-width="0.4" stroke-dasharray="3 6" opacity="0.25"/>
+        <text x="52" y="38"  font-size="7.5" fill="#8C7B6B" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">$1.5B</text>
+        <line x1="58" y1="103" x2="498" y2="103" stroke="#8C7B6B" stroke-width="0.4" stroke-dasharray="3 6" opacity="0.25"/>
+        <text x="52" y="106" font-size="7.5" fill="#8C7B6B" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">$1B</text>
+        <line x1="58" y1="171" x2="498" y2="171" stroke="#8C7B6B" stroke-width="0.4" stroke-dasharray="3 6" opacity="0.25"/>
+        <text x="52" y="174" font-size="7.5" fill="#8C7B6B" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">$500M</text>
+        <line x1="58" y1="222" x2="498" y2="222" stroke="#8C7B6B" stroke-width="0.4" stroke-dasharray="3 6" opacity="0.25"/>
+        <text x="52" y="225" font-size="7.5" fill="#8C7B6B" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">$250M</text>
+        <text x="84"  y="358" font-size="8" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">0</text>
+        <text x="176" y="358" font-size="8" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">20</text>
+        <text x="268" y="358" font-size="8" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">40</text>
+        <text x="360" y="358" font-size="8" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">60</text>
+        <text x="452" y="358" font-size="8" fill="#2A2520" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">80</text>
+        <text x="278" y="374" font-size="8" fill="#2A2520" letter-spacing="1.4" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace">YEARS OF NARRATIVE MATERIAL BEFORE FIRST FILM</text>
+        <text x="14" y="185" font-size="7.5" fill="#8C7B6B" letter-spacing="1.4" text-anchor="middle" transform="rotate(-90 14 185)" style="font-family:'IBM Plex Mono',monospace">FIRST-FILM WORLDWIDE GROSS</text>
+        <g id="sd-cb"><circle class="ss" cx="84" cy="335" r="5" fill="#C4613A" opacity="0.7"/><text class="sf" x="90" y="333" font-size="7.5" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace">Care Bears</text></g>
+        <g id="sd-tr"><circle class="ss" cx="84" cy="253" r="7" fill="#C4613A"/><text class="sf" x="90" y="251" font-size="7.5" fill="#C4613A" font-weight="500" style="font-family:'IBM Plex Mono',monospace">Trolls — $347M (first film)</text><text class="sf" x="90" y="262" font-size="7" fill="#C4613A" style="font-family:'IBM Plex Mono',monospace">$602M across 3 films</text></g>
+        <g id="sd-pa"><circle class="ss" cx="452" cy="300" r="6" fill="#2A2520" opacity="0.65"/><text class="sf" x="434" y="298" font-size="7.5" fill="#2A2520" text-anchor="end" style="font-family:'IBM Plex Mono',monospace">Paddington</text></g>
+        <g id="sd-so"><circle class="ss" cx="222" cy="265" r="6" fill="#2A2520" opacity="0.65"/><text class="sf" x="228" y="263" font-size="7.5" fill="#2A2520" style="font-family:'IBM Plex Mono',monospace">Sonic — $320M</text></g>
+        <g id="sd-le"><circle class="ss" cx="84" cy="171" r="8" fill="#2A2520" opacity="0.65"/><text class="sf" x="90" y="169" font-size="7.5" fill="#2A2520" style="font-family:'IBM Plex Mono',monospace">LEGO Movie — $469M</text></g>
+        <g id="sd-ba"><circle class="ss" cx="268" cy="47" r="9" fill="#2A2520" opacity="0.65"/><text class="sf" x="274" y="45" font-size="8" fill="#2A2520" font-weight="500" style="font-family:'IBM Plex Mono',monospace">Barbie — $1.44B</text><text class="sf" x="274" y="57" font-size="7" fill="#8C7B6B" style="font-family:'IBM Plex Mono',monospace">Gerwig, 2023</text></g>
+        <g id="sd-la" style="opacity:0;transition:opacity .7s ease">
+          <line x1="84" y1="240" x2="84" y2="60" stroke="#E8192C" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <circle cx="84" cy="240" r="8" fill="#EDE8DF" stroke="#E8192C" stroke-width="2.5"/>
+          <text x="84" y="246" font-size="14" fill="#E8192C" font-weight="400" text-anchor="middle" style="font-family:'Instrument Serif',serif">?</text>
+          <text x="90" y="232" font-size="9" fill="#E8192C" font-weight="500" style="font-family:'IBM Plex Mono',monospace">LABUBU</text>
+          <text x="90" y="244" font-size="7.5" fill="#E8192C" style="font-family:'IBM Plex Mono',monospace">(0 years, unresolved)</text>
+          <text x="84" y="52" font-size="22" fill="#E8192C" font-weight="400" text-anchor="middle" opacity="0.35" style="font-family:'Instrument Serif',serif">?</text>
+        </g>
+        <text x="62" y="390" font-size="7" fill="#8C7B6B" opacity="0.65" style="font-family:'IBM Plex Mono',monospace">* First-film gross approximate. Labubu Y-position unresolved — question mark is data-honest, not rhetorical. Box Office Mojo.</text>
+      </svg>
+    </div>
+    <!-- Paddington -->
+    <div class="viz" id="ch8-viz-pad">
+      <div class="img-panel on-black" data-parallax="cover">
+        <img src="Paddington.png" alt="Paddington Bear mid-leap holding umbrella and suitcase against black background">
+        <div class="img-caption">Paddington, from Paddington 2. StudioCanal, 2017. Dir. Paul King.<br>A character in motion. With a reason to exist.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CODA ═══ -->
+<section class="coda">
+  <div class="coda-inner">
+    <p>There is a pattern in consumer brands that is easier to name than to see from the inside. A company encounters a constraint early in its life. Rather than treating the constraint as a problem to solve, the company builds around it. The workaround becomes a position, the position becomes a philosophy, and the philosophy becomes a brand, until no one inside the company can see that it was never a choice.</p>
+    <p>The philosophy described something real. But it was never the engine. The engine was product design, retail execution, and the behavioral loop of collectibility. The philosophy was an explanation that rested comfortably on top of a business that had never required it to bear weight.</p>
+    <p>When the engine changed, the philosophy collapsed. The plush pivot replaced the behavioral loop with cultural relevance as the primary driver of repeat purchase. Cultural relevance, unlike a blind-box mechanic, requires a reason. It requires the consumer to feel something specific about the character, not merely to want the next figure in a set. The film is Pop Mart's attempt to supply that reason. Whether it succeeds depends on whether Paul King and Kasing Lung can find inside Labubu the kind of emotional specificity that Lung's original picture books gestured toward but that Pop Mart spent a decade deliberately withholding.</p>
+    <p>Pop Mart's constraint disappeared the moment the Sony deal was signed. The company now has access to world-class narrative talent, a global distribution partner, and a director whose previous work demonstrates precisely the skill the project requires: finding the emotional core inside a character the world already recognizes but does not yet understand. The question is no longer whether Pop Mart can tell a story. It is whether the company, its investors, and its consumers can survive the transition from a brand that said stories were unnecessary to a brand that is betting its future on one.</p>
+    <div class="coda-byline">Asia Aisle &nbsp;·&nbsp; Brand Intelligence &nbsp;·&nbsp; 2026</div>
+  </div>
+</section>
+
+<script>
+(function(){'use strict';
+
+/* ─── CITATIONS ─── */
+var C={
+  '1':'Pop Mart Annual Results, HKEX (March 25, 2026)',
+  '2':'Pop Mart / Sony Pictures announcement, March 19, 2026 · Deadline · Screen Daily',
+  '3':'Wang Ning, Xinhua wire service, March 29, 2026',
+  '4':'PKU Guanghua case study (Zhang Yichi, Wang Xiaolong), 2020 · Li Xiang, Because of Uniqueness, 2023',
+  '5':'Jiemian News, 2020 · Ma Yue, Alphabet List, January 2021',
+  '6':'36Kr, April 2026: animated shorts ended without results',
+  '7':'Wang Ning, CCTV Finance, March 21, 2026',
+  '8':'Paul King filmography: Box Office Mojo · The Numbers',
+  '9':'Si De, Pop Mart COO, 2025 industry interview',
+  '10':'Kasing Lung biography — South China Morning Post, 2023',
+  '11':'Pop Mart press release, November 2025 (Macy's Thanksgiving Day Parade)',
+  '12':'Pop Mart / FIFA announcement, March 2026',
+  '13':'Google Trends: search term "Labubu," United States, 2024–2026',
+  '14':'Consumer Edge Insight Flash (October 2025) · Deutsche Bank · Morgan Stanley',
+  '15':'Zac Bissonnette, The Great Beanie Baby Bubble, 2015',
+  '16':'Sanrio corporate disclosures; composite estimate from industry reporting',
+  '17':'SimilarWeb; DemandSage Labubu Statistics 2026',
+  '18':'Pew Research Center: America's Views of China, 2025',
+  '19':'Film dataset: Box Office Mojo; The Numbers. Asia Aisle IP Lab analytical judgment.',
+};
+var tip=document.getElementById('cite-tip');
+document.querySelectorAll('.fn').forEach(function(fn){
+  fn.addEventListener('mouseenter',function(e){
+    tip.textContent='['+fn.dataset.n+'] '+C[fn.dataset.n];
+    tip.style.opacity='1';
+    var r=fn.getBoundingClientRect();
+    var tw=Math.min(320,window.innerWidth-24);
+    var left=r.left+r.width/2-tw/2;
+    left=Math.max(12,Math.min(left,window.innerWidth-tw-12));
+    tip.style.width=tw+'px';
+    tip.style.left=left+'px';
+    tip.style.top=(r.top-tip.offsetHeight-10+window.scrollY)+'px';
+    // reposition after measure
+    requestAnimationFrame(function(){
+      tip.style.top=(r.top-tip.offsetHeight-10+window.scrollY)+'px';
+    });
+  });
+  fn.addEventListener('mouseleave',function(){tip.style.opacity='0'});
+});
+
+/* ─── HERO ─── */
+requestAnimationFrame(function(){
+  setTimeout(function(){
+    document.getElementById('h-eye').classList.add('in');
+    document.getElementById('h-t').classList.add('in');
+    document.getElementById('h-s').classList.add('in');
+  },120);
+});
+
+/* ─── PROGRESS ─── */
+var pb=document.getElementById('pb'),mast=document.getElementById('mast');
+var heroEl=document.querySelector('.hero');
+window.addEventListener('scroll',function(){
+  var s=window.scrollY,d=document.body.scrollHeight-window.innerHeight;
+  pb.style.width=(s/d*100)+'%';
+  mast.classList.toggle('light',s>heroEl.offsetHeight-80);
+},{passive:true});
+
+/* ─── STAGGER ─── */
+function stagger(els){els.forEach(function(el,i){el.style.transitionDelay=(Math.log10(i+1)*0.4).toFixed(3)+'s'})}
+
+/* ─── PANEL ACTIVATION ─── */
+var fired={};
+function activate(id){
+  var p=document.getElementById(id);if(!p)return;
+  p.closest('.sticky-stage').querySelectorAll('.viz').forEach(function(v){v.classList.remove('active')});
+  p.classList.add('active');
+  if(fired[id])return;fired[id]=true;
+  var c=p.dataset.custom;
+  if(c==='mi')animMI();
+  else if(c==='rk')animRK();
+  else if(c==='timeline')animTL();
+  else if(c==='callout38')animC38();
+  else if(c==='audienceshift')initAudCanvas();
+  else if(c==='loopcanvas')initLoopCanvas();
+  else if(c==='traj')animTraj();
+  else if(c==='scatter')animScatter();
+  else if(c==='assembly')animAssembly();
+  else if(c==='cedecline')animCE();
+  else{
+    var els=Array.from(p.querySelectorAll('.sf,.ss,.sl,.sb,.se,.sr'));
+    stagger(els);
+    requestAnimationFrame(function(){requestAnimationFrame(function(){els.forEach(function(e){e.classList.add('in')})})});
+  }
+  // CE decline activates on ch6-viz-1
+  if(id==='ch5-viz-ce'){animCE();}
+}
+
+/* ─── OBSERVERS ─── */
+document.querySelectorAll('.scrolly').forEach(function(sc){
+  var ch=sc.dataset.chapter;
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting)activate('ch'+ch+'-viz-'+e.target.dataset.viz)});
+  },{threshold:0.45,rootMargin:'0px 0px -15% 0px'});
+  sc.querySelectorAll('.scene[data-viz]').forEach(function(s){obs.observe(s)});
+});
+
+/* Init only Ch1 panel 0 on load */
+window.addEventListener('DOMContentLoaded',function(){
+  setTimeout(function(){activate('ch1-viz-0')},400);
+});
+
+/* ══════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════ */
+
+/* METRIC COUNT-UP */
+function animMI(){
+  var metrics=[
+    {row:'mi-r1',val:'mi-v1',lbl:'mi-l1',target:185,prefix:'+',suffix:'%',delay:0},
+    {row:'mi-r2',val:'mi-v2',lbl:'mi-l2',target:309,prefix:'+',suffix:'%',delay:420},
+    {row:'mi-r3',val:'mi-v3',lbl:'mi-l3',target:748,prefix:'+',suffix:'%',delay:840}
+  ];
+  metrics.forEach(function(m){
+    setTimeout(function(){
+      var row=document.getElementById(m.row);
+      row.classList.add('in');
+      countUp(document.getElementById(m.val),m.target,900,m.prefix,m.suffix);
+    },m.delay);
+  });
+  // Negative erupts after positives finish
+  setTimeout(function(){
+    var neg=document.getElementById('mi-neg');
+    neg.classList.add('in');
+    countUp(document.getElementById('mi-nv'),22.5,600,'−','%',1);
+    setTimeout(function(){document.getElementById('mi-n2').classList.add('in')},500);
+    // Dim positives
+    setTimeout(function(){
+      ['mi-v1','mi-v2','mi-v3'].forEach(function(id){document.getElementById(id).classList.add('dimmed')});
+      ['mi-l1','mi-l2','mi-l3'].forEach(function(id){document.getElementById(id).classList.add('dimmed')});
+    },300);
+  },2000);
+}
+function countUp(el,target,dur,pre,suf,decimals){
+  decimals=decimals||0;
+  var start=performance.now();
+  function update(now){
+    var t=Math.min((now-start)/dur,1);
+    var ease=1-Math.pow(1-t,3);
+    var val=(ease*target);
+    el.textContent=pre+(decimals?val.toFixed(1):Math.round(val))+suf;
+    if(t<1)requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+/* RORSCHACH */
+function animRK(){
+  setTimeout(function(){
+    document.getElementById('rk-svg').classList.add('in');
+    document.getElementById('rk-labels').classList.add('in');
+  },100);
+  // Run standard stagger on remaining elements
+  var p=document.getElementById('ch1-viz-1');
+  var els=Array.from(p.querySelectorAll('.sf,.ss,.sl,.se,.sr'));
+  stagger(els);
+  setTimeout(function(){els.forEach(function(e){e.classList.add('in')})},100);
+}
+
+/* LABUBU TIMELINE */
+function animTL(){
+  var flat=document.getElementById('tl-flat'),erupt=document.getElementById('tl-erupt');
+  var marker=document.getElementById('tl-marker'),annot=document.getElementById('tl-annot');
+  var dot=document.getElementById('tl-dot'),term=document.getElementById('tl-term');
+  function ap(el,dur,delay){setTimeout(function(){el.style.transition='stroke-dashoffset '+dur+'ms cubic-bezier(0.4,0,0.2,1)';el.style.strokeDashoffset='0'},delay)}
+  function sh(el,delay){setTimeout(function(){el.style.opacity='1'},delay)}
+  ap(flat,1000,80);sh(marker,1150);sh(annot,1500);
+  ap(erupt,980,2200);
+  setTimeout(function(){dot.style.opacity='1';dot.style.transform='scale(1)'},3250);
+  sh(term,3600);
+}
+
+/* 38% CALLOUT */
+function animC38(){
+  setTimeout(function(){
+    document.getElementById('c38-num').classList.add('in');
+    document.getElementById('c38-lbl').classList.add('in');
+    document.getElementById('c38-sub').classList.add('in');
+  },80);
+}
+
+/* AUDIENCE SHIFT CANVAS */
+function initAudCanvas(){
+  var canvas=document.getElementById('aud-canvas');
+  if(!canvas)return;
+  var stage=canvas.closest('.viz');
+  var W,H,ctx,dots=[],phase=0,phaseTick=0,animId;
+  var dpr=window.devicePixelRatio||1;
+  function resize(){
+    W=stage.offsetWidth;H=stage.offsetHeight;
+    canvas.width=W*dpr;canvas.height=H*dpr;
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  }
+  function initDots(){
+    dots=[];
+    var cx=W*0.42,cy=H*0.5;
+    for(var i=0;i<240;i++){
+      var a=Math.random()*Math.PI*2;
+      var r=Math.random()*Math.min(W,H)*0.18;
+      dots.push({
+        x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r,
+        tx:0,ty:0,
+        female:i<72,// 30% female initially
+        color:'#2A2520',
+        alpha:0.7+Math.random()*0.3,
+        size:2+Math.random()*2.5,
+        speed:0.04+Math.random()*0.03
+      });
+    }
+  }
+  function setTargets(){
+    // Spread across canvas, 60%+ female (red), geography spread
+    var regions=[
+      {cx:W*.28,cy:H*.45,w:W*.18,h:H*.25,count:80},// SE Asia
+      {cx:W*.52,cy:H*.35,w:W*.16,h:H*.22,count:55},// Europe
+      {cx:W*.72,cy:H*.52,w:W*.18,h:H*.28,count:65},// N America
+      {cx:W*.42,cy:H*.65,w:W*.14,h:H*.18,count:40} // Other
+    ];
+    var di=0;
+    regions.forEach(function(reg){
+      for(var i=0;i<reg.count&&di<dots.length;i++,di++){
+        dots[di].tx=reg.cx+(Math.random()-.5)*reg.w;
+        dots[di].ty=reg.cy+(Math.random()-.5)*reg.h;
+        dots[di].female=di<144;// 60% female
+      }
+    });
+  }
+  function lerp(a,b,t){return a+(b-a)*t}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#EDE8DF';ctx.fillRect(0,0,W,H);
+    var t=Math.min(phaseTick/80,1);
+    var ease=t<0.5?2*t*t:(1-Math.pow(-2*t+2,2)/2);
+    // Phase labels
+    ctx.font='500 9px IBM Plex Mono,monospace';
+    ctx.textAlign='center';
+    if(phase===0){
+      ctx.fillStyle='rgba(42,37,32,'+Math.max(0,1-phaseTick/40)+')';
+      ctx.fillText('2023',W*.42,H*.22);
+      ctx.font='400 8px IBM Plex Mono,monospace';
+      ctx.fillStyle='rgba(139,123,107,'+Math.max(0,1-phaseTick/40)+')';
+      ctx.fillText('MAJORITY MALE · CHINA-CONCENTRATED',W*.42,H*.31);
+    }else{
+      ctx.fillStyle='rgba(232,25,44,'+Math.min(1,(phaseTick-40)/30)+')';
+      ctx.fillText('2025',W*.5,H*.12);
+      ctx.font='400 8px IBM Plex Mono,monospace';
+      ctx.fillStyle='rgba(139,123,107,'+Math.min(1,(phaseTick-40)/30)+')';
+      ctx.fillText('60%+ FEMALE · GLOBAL',W*.5,H*.2);
+      // Region labels
+      var la=Math.min(1,(phaseTick-50)/30);
+      [['SE ASIA',W*.28,H*.72],['EUROPE',W*.52,H*.15],['N. AMERICA',W*.72,H*.82]].forEach(function(r){
+        ctx.fillStyle='rgba(196,97,58,'+la+')';
+        ctx.font='400 7px IBM Plex Mono,monospace';
+        ctx.fillText(r[0],r[1],r[2]);
+      });
+    }
+    dots.forEach(function(d){
+      var cx=d.x,cy=d.y;
+      if(phase===1){
+        cx=lerp(d.x,d.tx,ease);
+        cy=lerp(d.y,d.ty,ease);
+      }
+      var col=phase===1&&d.female?'rgba(232,25,44,':'rgba(42,37,32,';
+      ctx.beginPath();ctx.arc(cx,cy,d.size,0,Math.PI*2);
+      ctx.fillStyle=col+d.alpha+')';
+      ctx.fill();
+    });
+    phaseTick++;
+    if(phase===0&&phaseTick>100){phase=1;phaseTick=0;setTargets()}
+    animId=requestAnimationFrame(draw);
+  }
+  var obs=new IntersectionObserver(function(en){
+    en.forEach(function(e){
+      if(e.isIntersecting){resize();initDots();draw()}
+      else if(animId)cancelAnimationFrame(animId);
+    });
+  },{threshold:0.2});
+  obs.observe(stage.closest('.scrolly')||stage);
+  window.addEventListener('resize',function(){if(animId){resize();initDots()}},{passive:true});
+}
+
+/* LOOP VS LINE CANVAS */
+function initLoopCanvas(){
+  var canvas=document.getElementById('loop-canvas');
+  if(!canvas)return;
+  var stage=canvas.closest('.viz');
+  var W,H,ctx,animId;var dpr=window.devicePixelRatio||1;
+  var particles=[];var txX,txY,txFall=0,txDone=false,txTimer=0;
+  var loopCount=0;var frame=0;
+  function resize(){
+    W=stage.offsetWidth;H=stage.offsetHeight;
+    canvas.width=W*dpr;canvas.height=H*dpr;
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+    txY=H*.5;txX=W*.56;
+  }
+  function initParticles(){
+    particles=[];
+    var cx=W*.27,cy=H*.5,r=Math.min(W*.2,H*.32);
+    for(var i=0;i<14;i++){
+      var phase=(i/14)*Math.PI*2;
+      particles.push({
+        angle:phase,
+        speed:.014+Math.random()*.005,
+        size:3+Math.random()*2.5,
+        opacity:.6+Math.random()*.4,
+        cx:cx,cy:cy,r:r,
+        trail:[],
+        laps:0,lastLap:phase
+      });
+    }
+  }
+  var labels=[
+    {a:-Math.PI/2,text:'BUY'},
+    {a:0,text:'DISCOVER'},
+    {a:Math.PI/2,text:'CHASE'},
+    {a:Math.PI,text:'RETURN'}
+  ];
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#EDE8DF';ctx.fillRect(0,0,W,H);
+    var cx=W*.27,cy=H*.5,r=Math.min(W*.2,H*.32);
+    // Left title
+    ctx.font='600 9px IBM Plex Mono,monospace';ctx.fillStyle='#2A2520';ctx.textAlign='center';
+    ctx.fillText('BLIND BOX',cx,H*.1);
+    ctx.font='400 8px IBM Plex Mono,monospace';ctx.fillStyle='#E8192C';
+    ctx.fillText('↻ RECURRING',cx,H*.18);
+    // Track circle
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle='rgba(139,123,107,.2)';ctx.lineWidth=2;ctx.stroke();
+    // Label nodes
+    labels.forEach(function(lb){
+      var lx=cx+(r+24)*Math.cos(lb.a),ly=cy+(r+24)*Math.sin(lb.a);
+      var nearP=false;
+      particles.forEach(function(p){
+        var norm=((p.angle%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+        var la=((lb.a%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+        var diff=Math.abs(norm-la);
+        if(diff<.35||diff>Math.PI*2-.35)nearP=true;
+      });
+      // Node circle
+      ctx.beginPath();ctx.arc(lx,ly,nearP?7:5,0,Math.PI*2);
+      ctx.fillStyle=nearP?'rgba(232,25,44,.9)':'rgba(139,123,107,.3)';ctx.fill();
+      ctx.font=(nearP?'600':'500')+' 8px IBM Plex Mono,monospace';
+      ctx.fillStyle=nearP?'#E8192C':'#2A2520';ctx.textAlign='center';
+      ctx.fillText(lb.text,lx,ly+(r>.1?18:14));
+    });
+    // Particles
+    particles.forEach(function(p){
+      p.angle+=p.speed;
+      p.trail.push({angle:p.angle});
+      if(p.trail.length>18)p.trail.shift();
+      // Trail
+      p.trail.forEach(function(t,i){
+        var f=i/p.trail.length;
+        var px=p.cx+p.r*Math.cos(t.angle);
+        var py=p.cy+p.r*Math.sin(t.angle);
+        ctx.beginPath();ctx.arc(px,py,p.size*f*.7,0,Math.PI*2);
+        ctx.fillStyle='rgba(232,25,44,'+(p.opacity*f*.35)+')';ctx.fill();
+      });
+      // Head
+      var hx=p.cx+p.r*Math.cos(p.angle),hy=p.cy+p.r*Math.sin(p.angle);
+      ctx.beginPath();ctx.arc(hx,hy,p.size,0,Math.PI*2);
+      ctx.fillStyle='rgba(232,25,44,'+p.opacity+')';ctx.fill();
+    });
+    // Loop counter
+    if(frame%420===0&&frame>0)loopCount++;
+    ctx.font='500 10px IBM Plex Mono,monospace';ctx.fillStyle='rgba(42,37,32,.55)';ctx.textAlign='center';
+    ctx.fillText('LOOP '+String(loopCount+1).padStart(3,'0'),cx,cy);
+    // Divider
+    ctx.setLineDash([4,6]);ctx.beginPath();
+    ctx.moveTo(W*.5,H*.08);ctx.lineTo(W*.5,H*.92);
+    ctx.strokeStyle='rgba(139,123,107,.2)';ctx.lineWidth=1;ctx.stroke();
+    ctx.setLineDash([]);
+    // Right: plush track
+    var tx0=W*.56,tx1=W*.66,tx2=W*.76,tx3=W*.86,tY=H*.5;
+    var trackEnd=W*.91;
+    ctx.font='600 9px IBM Plex Mono,monospace';ctx.fillStyle='#2A2520';ctx.textAlign='center';
+    ctx.fillText('PLUSH',W*.73,H*.1);
+    ctx.font='400 8px IBM Plex Mono,monospace';ctx.fillStyle='#8C7B6B';
+    ctx.fillText('× NO RETURN MECHANIC',W*.73,H*.18);
+    // Track line
+    ctx.beginPath();ctx.moveTo(tx0,tY);ctx.lineTo(trackEnd,tY);
+    ctx.strokeStyle='rgba(139,123,107,.3)';ctx.lineWidth=1.5;ctx.stroke();
+    // Track nodes
+    [[tx0,'BUY'],[tx1,'CARRY'],[tx2,'DISPLAY'],[tx3,'MOVE ON']].forEach(function(n){
+      ctx.beginPath();ctx.arc(n[0],tY,5,0,Math.PI*2);
+      ctx.fillStyle='rgba(139,123,107,.35)';ctx.fill();
+      ctx.font='500 7.5px IBM Plex Mono,monospace';ctx.fillStyle='#8C7B6B';ctx.textAlign='center';
+      ctx.fillText(n[1],n[0],tY+18);
+    });
+    // Terminal stop
+    ctx.beginPath();ctx.moveTo(trackEnd,tY-12);ctx.lineTo(trackEnd,tY+12);
+    ctx.strokeStyle='#C4613A';ctx.lineWidth=3;ctx.stroke();
+    // Transaction dot
+    txTimer++;
+    if(txTimer>180){txX=tx0-.5;txFall=0;txDone=false;txTimer=0;}
+    if(!txDone){
+      if(txX<trackEnd-.5){
+        txX+=1.4;
+      }else{
+        txFall+=2.5;
+        if(txFall>H*.28)txDone=true;
+      }
+      var alpha=txFall>0?Math.max(0,1-txFall/(H*.28)):1;
+      ctx.beginPath();ctx.arc(txX,tY+txFall,5,0,Math.PI*2);
+      ctx.fillStyle='rgba(139,123,107,'+alpha+')';ctx.fill();
+    }
+    frame++;animId=requestAnimationFrame(draw);
+  }
+  var stageObs=new IntersectionObserver(function(en){
+    en.forEach(function(e){
+      if(e.isIntersecting){resize();initParticles();txX=W*.56;draw();}
+      else if(animId)cancelAnimationFrame(animId);
+    });
+  },{threshold:0.2});
+  stageObs.observe(stage.closest('.scrolly')||stage);
+  window.addEventListener('resize',function(){if(animId){resize();initParticles()}},{passive:true});
+}
+
+/* TRAJECTORIES */
+function animTraj(){
+  function ap(id,dur,delay){var el=document.getElementById(id);if(!el)return;
+    var len=0;try{len=Math.ceil(el.getTotalLength())}catch(e){len=600}
+    el.style.strokeDasharray=len;el.style.strokeDashoffset=len;
+    setTimeout(function(){el.style.transition='stroke-dashoffset '+dur+'ms cubic-bezier(0.4,0,0.2,1)';el.style.strokeDashoffset='0'},delay);}
+  function sh(id,delay){var el=document.getElementById(id);if(el)setTimeout(function(){el.style.opacity='1'},delay);}
+  ap('traj-hk',2200,100);sh('traj-hk-lbl',200);sh('traj-hk-end',2100);
+  ap('traj-bb',1400,1100);sh('traj-bb-lbl',1200);sh('traj-bb-peak',1900);sh('traj-bb-end',2100);
+  ap('traj-pm',900,2400);sh('traj-pm-lbl',2500);sh('traj-qmark',3300);sh('traj-verdict',3600);
+}
+
+/* SCATTER */
+function animScatter(){
+  var dots=['sd-cb','sd-tr','sd-pa','sd-so','sd-tf','sd-ba'];
+  dots.forEach(function(id,i){
+    setTimeout(function(){
+      var g=document.getElementById(id);if(!g)return;
+      g.querySelectorAll('.ss,.sf').forEach(function(e){e.classList.add('in')});
+    },120+i*200);
+  });
+  setTimeout(function(){var la=document.getElementById('sd-la');if(la)la.style.opacity='1'},120+dots.length*200+400);
+}
+
+/* ASSEMBLY LINE */
+function animAssembly(){
+  var belt=document.getElementById('asm-belt');
+  if(!belt)return;
+  belt.querySelectorAll('.asm-station').forEach(function(s,i){
+    setTimeout(function(){s.classList.add('in')},i*120);
+  });
+  setTimeout(function(){
+    var fq=document.getElementById('asm-fq');if(fq)fq.classList.add('in');
+  },700);
+}
+
+/* CONSUMER EDGE DECLINE */
+function animCE(){
+  var line=document.getElementById('ce-line');
+  if(!line)return;
+  line.style.transition='stroke-dashoffset 1.8s cubic-bezier(0.4,0,0.2,1)';
+  line.style.strokeDashoffset='0';
+  setTimeout(function(){
+    var pa=document.getElementById('ce-peak-annot');if(pa)pa.style.opacity='1';
+  },1400);
+  setTimeout(function(){
+    var fa=document.getElementById('ce-fall-annot');if(fa)fa.style.opacity='1';
+  },2000);
+}
+
+/* ─── LISA CANVAS ─── */
+(function(){
+  var canvas=document.getElementById('lisa-canvas');if(!canvas)return;
+  var stage=canvas.closest('.viz');
+  var W,H,ctx,particles=[],active=false,frame=0;var dpr=window.devicePixelRatio||1;
+  function resize(){W=stage.offsetWidth;H=stage.offsetHeight;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);}
+  function mkP(cx,cy){var a=Math.random()*Math.PI*2,sp=.7+Math.random()*2.6;return{cx:cx,cy:cy,x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,size:1.2+Math.random()*2.4,life:0,maxLife:150+Math.random()*160,red:Math.random()>.35};}
+  function initP(){particles=[];var cx=W/2,cy=H*.44;for(var i=0;i<140;i++)particles.push(mkP(cx,cy));}
+  function anim(){
+    if(!active)return;requestAnimationFrame(anim);
+    ctx.fillStyle='#EDE8DF';ctx.fillRect(0,0,W,H);
+    var cx=W/2,cy=H*.44;
+    var da=Math.min(1,frame/30);
+    ctx.font='500 10px IBM Plex Mono,monospace';ctx.fillStyle='rgba(139,123,107,'+da+')';ctx.textAlign='center';ctx.fillText('APRIL 14, 2024',cx,cy-76);
+    ctx.font='400 9px IBM Plex Mono,monospace';ctx.fillStyle='rgba(139,123,107,'+(da*.75)+')';ctx.fillText('LISA / BLACKPINK · INSTAGRAM STORY',cx,cy-62);
+    var pulse=.5+.5*Math.sin(frame*.15);
+    ctx.beginPath();ctx.arc(cx,cy,4+pulse*2,0,Math.PI*2);ctx.fillStyle='rgba(232,25,44,'+(0.6+pulse*.4)+')';ctx.fill();
+    particles.forEach(function(p){
+      var damp=1-(p.life/p.maxLife)*.75;p.x+=p.vx*damp;p.y+=p.vy*damp;p.life++;
+      var t=p.life/p.maxLife,alpha=(1-t*t)*.8;
+      var r,g,b;if(p.red){r=232;g=25;b=44;}else{r=196;g=97;b=58;}
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size*(1-t*.25),0,Math.PI*2);ctx.fillStyle='rgba('+r+','+g+','+b+','+alpha+')';ctx.fill();
+      if(p.life>=p.maxLife){var np=mkP(cx,cy);np.life=Math.floor(Math.random()*20);Object.assign(p,np);}
+    });
+    if(frame>80){
+      var sa=Math.min(1,(frame-80)/50);
+      ctx.font='500 28px IBM Plex Mono,monospace';ctx.fillStyle='rgba(232,25,44,'+sa+')';ctx.textAlign='center';ctx.fillText('210,000+',cx,cy+60);
+      ctx.font='400 8px IBM Plex Mono,monospace';ctx.fillStyle='rgba(139,123,107,'+sa+')';ctx.fillText('SOCIAL MENTIONS · ONE WEEK',cx,cy+78);
+      ctx.font='500 13px IBM Plex Mono,monospace';ctx.fillStyle='rgba(42,37,32,'+(sa*.7)+')';ctx.fillText('10M → 50M UNITS / MONTH',cx,cy+102);
+      ctx.font='400 8px IBM Plex Mono,monospace';ctx.fillStyle='rgba(139,123,107,'+(sa*.7)+')';ctx.fillText('PRODUCTION CAPACITY SCALE',cx,cy+116);
+    }
+    frame++;
+  }
+  var so=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting&&!active){resize();initP();active=true;frame=0;anim();}});},{threshold:.15});
+  so.observe(stage.closest('.scrolly')||stage);
+  // ch4 lisa canvas
+  window.addEventListener('resize',function(){if(active){resize();initP();}},{passive:true});
+})();
+
+})();
+
+/* ════════════════════════════════════════
+   SCROLL PARALLAX — images move with scroll
+   Each .img-panel[data-parallax] gets a
+   scroll-driven transform on its <img>.
+   The image is always slightly oversized
+   (scale > 1) so movement never reveals
+   the edges of the frame.
+════════════════════════════════════════ */
+(function(){
+
+  // Config per effect type
+  var FX = {
+    // "Giant" — Sonny Angel. Starts zoomed way in
+    // (faces fill frame), pulls back to full array.
+    // Reader feels the scale of the crowd.
+    giant: {
+      scaleStart: 1.55, scaleEnd: 1.0,
+      yStart: 6,        yEnd: 0,      // % translateY, positive = image pushed down
+      ease: function(t){ return t < .5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2 }
+    },
+    // Portrait — Lung, Lisa, Shimizu.
+    // Subtle upward drift + slight scale settle.
+    portrait: {
+      scaleStart: 1.18, scaleEnd: 1.0,
+      yStart: 4,        yEnd: 0,
+      ease: function(t){ return 1-Math.pow(1-t,3) }
+    },
+    // Cover — book, Paddington. Object on dark bg.
+    // Rises from slightly below, grows into frame.
+    cover: {
+      scaleStart: 1.12, scaleEnd: 1.0,
+      yStart: 8,        yEnd: 0,
+      ease: function(t){ return t < .5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2 }
+    }
+  };
+
+  // Collect all parallax panels
+  var panels = Array.from(document.querySelectorAll('.img-panel[data-parallax]'));
+
+  function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
+  function lerp(a, b, t){ return a + (b - a) * t; }
+
+  function updateParallax(){
+    var vh = window.innerHeight;
+    panels.forEach(function(panel){
+      var img = panel.querySelector('img');
+      if(!img) return;
+
+      // Find the scrolly section this panel lives in
+      var section = panel.closest('.scrolly');
+      if(!section) return;
+
+      var rect = section.getBoundingClientRect();
+
+      // t = 0: section top just entered bottom of viewport
+      // t = 1: section bottom just left top of viewport
+      // This means the image is moving throughout the ENTIRE
+      // time the section is on screen — continuous, never jumps.
+      var total = rect.height + vh;
+      var traveled = vh - rect.top;   // how far section has moved through viewport
+      var t = clamp(traveled / total, 0, 1);
+
+      var fx = FX[panel.dataset.parallax] || FX.portrait;
+      var te = fx.ease(t);
+      var scale = lerp(fx.scaleStart, fx.scaleEnd, te);
+      var ty    = lerp(fx.yStart, fx.yEnd, te);
+
+      // will-change already set via CSS; no transition — fully scroll-driven
+      img.style.transform = 'scale(' + scale.toFixed(4) + ') translateY(' + ty.toFixed(2) + '%)';
+    });
+  }
+
+  // Apply parallax config as data-attributes to the right panels
+  function tag(id, type){
+    var el = document.getElementById(id);
+    if(el) el.dataset.parallax = type;
+  }
+
+  tag('ch2-viz-img0',       'giant');    // Sonny Angel — the giant
+  tag('ch2-viz-img1',       'portrait'); // Molly
+  tag('ch3-viz-lung',       'portrait'); // Kasing Lung
+  tag('ch3-viz-lisaphoto',  'portrait'); // Lisa
+  tag('ch5-viz-shimizu',    'portrait'); // Yuko Shimizu
+  tag('ch7-viz-book',       'cover');    // Monsters Trilogy
+  tag('ch7-viz-paddington', 'cover');    // Paddington
+
+  // Ensure img inside each parallax panel has no transition
+  // and sets will-change for GPU compositing
+  panels.forEach(function(p){
+    var img = p.querySelector('img');
+    if(img){
+      img.style.willChange = 'transform';
+      img.style.transition = 'none';
+      // The img needs to slightly overfill — handled by scale > 1
+      // but we also set overflow:hidden on parent (already set)
+    }
+  });
+
+  // On DOMContentLoaded panels may not have data-parallax yet
+  // (they get tagged above synchronously) — run once immediately
+  // then on every scroll frame
+  window.addEventListener('scroll', updateParallax, { passive: true });
+  window.addEventListener('resize', updateParallax, { passive: true });
+
+  // Initial paint — run after a tick so layout is settled
+  requestAnimationFrame(function(){
+    requestAnimationFrame(updateParallax);
+  });
+
+})();
+</script>
+
+/* ════════════════════════════════
+   SCROLL PARALLAX
+════════════════════════════════ */
+(function(){
+  var FX={
+    giant:{scaleStart:1.55,scaleEnd:1.0,yStart:6,yEnd:0,ease:function(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}},
+    portrait:{scaleStart:1.18,scaleEnd:1.0,yStart:4,yEnd:0,ease:function(t){return 1-Math.pow(1-t,3)}},
+    cover:{scaleStart:1.12,scaleEnd:1.0,yStart:8,yEnd:0,ease:function(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}}
+  };
+  var panels=[];
+  function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+  function lerp(a,b,t){return a+(b-a)*t}
+  function updateParallax(){
+    var vh=window.innerHeight;
+    panels.forEach(function(panel){
+      var img=panel.querySelector('img');
+      if(!img)return;
+      var section=panel.closest('.scrolly');
+      if(!section)return;
+      var rect=section.getBoundingClientRect();
+      var total=rect.height+vh;
+      var traveled=vh-rect.top;
+      var t=clamp(traveled/total,0,1);
+      var fx=FX[panel.dataset.parallax]||FX.portrait;
+      var te=fx.ease(t);
+      var scale=lerp(fx.scaleStart,fx.scaleEnd,te);
+      var ty=lerp(fx.yStart,fx.yEnd,te);
+      img.style.transform='scale('+scale.toFixed(4)+') translateY('+ty.toFixed(2)+'%)';
+    });
+  }
+  function initParallax(){
+    panels=Array.from(document.querySelectorAll('.img-panel[data-parallax]'));
+    panels.forEach(function(p){
+      var img=p.querySelector('img');
+      if(img){img.style.willChange='transform';img.style.transition='none';}
+    });
+    updateParallax();
+  }
+  window.addEventListener('scroll',updateParallax,{passive:true});
+  window.addEventListener('resize',updateParallax,{passive:true});
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(initParallax,200)});
+})();
+
+
+/* ─── LISA CANVAS ─── */
+(function(){
+  var canvas=document.getElementById('lisa-canvas');if(!canvas)return;
+  var stage=canvas.closest('.viz');
+  var W,H,ctx,particles=[],active=false,frame=0;var dpr=window.devicePixelRatio||1;
+  function resize(){W=stage.offsetWidth;H=stage.offsetHeight;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);}
+  function mkP(cx,cy){var a=Math.random()*Math.PI*2,sp=.7+Math.random()*2.6;return{cx:cx,cy:cy,x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,size:1.2+Math.random()*2.4,life:0,maxLife:150+Math.random()*160,red:Math.random()>.35};}
+  function initP(){particles=[];var cx=W/2,cy=H*.44;for(var i=0;i<140;i++)particles.push(mkP(cx,cy));}
+  function anim(){
+    if(!active)return;requestAnimationFrame(anim);
+    ctx.fillStyle='#EDE8DF';ctx.fillRect(0,0,W,H);
+    var cx=W/2,cy=H*.44;
+    var da=Math.min(1,frame/30);
+    ctx.font='500 10px IBM Plex Mono,monospace';ctx.fillStyle='rgba(139,123,107,'+da+')';ctx.textAlign='center';ctx.fillText('APRIL 14, 2024',cx,cy-76);
+    ctx.font='400 9px IBM Plex Mono,monospace';ctx.fillStyle='rgba(139,123,107,'+(da*.75)+')';ctx.fillText('LISA / BLACKPINK · INSTAGRAM',cx,cy-62);
+    var pulse=.5+.5*Math.sin(frame*.15);
+    ctx.beginPath();ctx.arc(cx,cy,4+pulse*2,0,Math.PI*2);ctx.fillStyle='rgba(232,25,44,'+(0.6+pulse*.4)+')';ctx.fill();
+    particles.forEach(function(p){
+      var damp=1-(p.life/p.maxLife)*.75;p.x+=p.vx*damp;p.y+=p.vy*damp;p.life++;
+      var t=p.life/p.maxLife,alpha=(1-t*t)*.8;
+      var r,g,b;if(p.red){r=232;g=25;b=44;}else{r=196;g=97;b=58;}
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size*(1-t*.25),0,Math.PI*2);ctx.fillStyle='rgba('+r+','+g+','+b+','+alpha+')';ctx.fill();
+      if(p.life>=p.maxLife){var np=mkP(cx,cy);np.life=Math.floor(Math.random()*20);Object.assign(p,np);}
+    });
+    if(frame>80){
+      var sa=Math.min(1,(frame-80)/50);
+      ctx.font='500 28px IBM Plex Mono,monospace';ctx.fillStyle='rgba(232,25,44,'+sa+')';ctx.textAlign='center';ctx.fillText('210,000+',cx,cy+60);
+      ctx.font='400 8px IBM Plex Mono,monospace';ctx.fillStyle='rgba(139,123,107,'+sa+')';ctx.fillText('SOCIAL MENTIONS · ONE WEEK',cx,cy+78);
+    }
+    frame++;
+  }
+  var so=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting&&!active){resize();initP();active=true;frame=0;anim();}});},{threshold:.15});
+  so.observe(stage.closest('.scrolly')||stage);
+  window.addEventListener('resize',function(){if(active){resize();initP();}},{passive:true});
+})();
+
+</script>
+</body>
+</html>
