@@ -870,10 +870,9 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
   /* ── Columns ── */
   #vis-ps .columns{
     display: flex;
-    gap: 8px;
-    align-items: flex-end;
-    height: 220px;
-    margin-bottom: 0.5rem;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
     padding: 0 4px;
   }
 
@@ -882,34 +881,35 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    height: 100%;
     position: relative;
   }
 
-  #vis-ps .col-bar-track{
+  #vis-ps .col-icon-wrap{
     width: 100%;
-    height: 100%;
-    position: relative;
-    border-radius: 3px 3px 0 0;
-    overflow: hidden;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--charcoal);
+    border-radius: 6px;
+    padding: 18%;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
   }
-
-  #vis-ps .col-bar{
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%;
-    height: 0%;
-    border-radius: 3px 3px 0 0;
-    transition: height 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  #vis-ps .col-bar.filled{ background: var(--charcoal); }
-  #vis-ps .col-bar.empty{
+  #vis-ps .col-icon-wrap.absent{
     background: transparent;
-    border: 2px dashed var(--stone);
-    border-bottom: none;
-    border-radius: 3px 3px 0 0;
-    box-sizing: border-box;
+    border: 2px dashed var(--terracotta);
+  }
+  #vis-ps .col-icon{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: invert(1);
+  }
+  #vis-ps .col-icon-wrap.absent .col-icon{
+    filter: none;
+    opacity: 0.3;
   }
 
   #vis-ps .col-label{
@@ -925,26 +925,12 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
     opacity: 0;
     transition: opacity 0.4s ease;
   }
-  #vis-ps .col-label.absent{ color: var(--stone); }
-
-  /* ── Status badge inside bar ── */
-  #vis-ps .col-status{
-    position: absolute;
-    top: 10px; left: 50%;
-    transform: translateX(-50%);
-    font-size: 8px; font-weight: 600;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    white-space: nowrap;
-  }
-  #vis-ps .col-status.active{ color: var(--cream); }
-  #vis-ps .col-status.none{ color: var(--terracotta); }
+  #vis-ps .col-label.absent{ color: var(--terracotta); }
 
   /* ── Competitor strip ── */
   #vis-ps .comp-strip{
     display: flex;
-    gap: 8px;
+    gap: 12px;
     margin-top: 1.5rem;
     padding: 0 4px;
     opacity: 0;
@@ -958,17 +944,17 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
     flex: 1;
     display: flex; flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 0.6rem 0.25rem;
+    gap: 6px;
+    padding: 0.8rem 0.25rem;
     border-top: 2px solid var(--terracotta);
   }
   #vis-ps .comp-card img{
-    max-width: 28px; max-height: 28px;
+    max-width: 64px; max-height: 40px;
     object-fit: contain; opacity: 0.85;
   }
   #vis-ps .comp-card .comp-name{
     font-family: 'Instrument Serif', serif;
-    font-size: 0.8rem; text-align: center;
+    font-size: 0.95rem; text-align: center;
   }
   #vis-ps .comp-card .comp-fn{
     font-size: 8px; font-weight: 400;
@@ -999,9 +985,10 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
   }
 
   @media (max-width: 640px) {
-    #vis-ps .columns{ height: 160px; }
+    #vis-ps .columns{ gap: 8px; }
     #vis-ps .col-label{ font-size: 8px; }
     #vis-ps .comp-spacer{ flex: 0; display: none; }
+    #vis-ps .comp-card img{ max-width: 48px; max-height: 32px; }
   }
 
 
@@ -1748,6 +1735,16 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
     opacity: 1;
   }
 
+  /* ── Character illustration ── */
+  #vis-fd .franchise-char{
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-left: 1rem;
+    opacity: 0.85;
+    flex-shrink: 0;
+  }
+
   /* ── Labubu pulsing ── */
   #vis-fd .film-dot.unknown{
     animation: pulse-labubu 2.4s ease-in-out infinite;
@@ -2090,13 +2087,13 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
   #vis-plush .pl-rR.on .pl-rf{color:#C4613A;font-size:2.3rem}
   #vis-plush .pl-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:600;letter-spacing:.08em;color:#E8192C;opacity:0;transition:opacity .6s;white-space:nowrap}
   #vis-plush .pl-badge.on{opacity:1}
-  #vis-plush .pl-shelf{display:flex;justify-content:center;gap:6px;align-items:flex-end;min-height:130px;padding:0 .25rem;margin-bottom:0}
+  #vis-plush .pl-shelf{display:flex;justify-content:center;gap:6px;align-items:flex-end;min-height:160px;padding:0 .25rem;margin-bottom:0}
   #vis-plush .pl-shelf-line{height:4px;background:#8C7B6B;border-radius:1px;margin-bottom:.4rem}
   #vis-plush .pl-slot{position:relative;width:calc(12.5% - 6px);display:flex;justify-content:center;align-items:flex-end}
   #vis-plush .pl-slot-box,#vis-plush .pl-slot-prod{transition:opacity .4s ease,transform .4s ease}
-  #vis-plush .pl-slot-box img{width:100%;height:105px;object-fit:contain;display:block}
+  #vis-plush .pl-slot-box img{width:100%;height:140px;object-fit:contain;display:block}
   #vis-plush .pl-slot-prod{position:absolute;bottom:0;left:50%;transform:translateX(-50%) scale(.8);opacity:0}
-  #vis-plush .pl-slot-prod img{width:100%;height:105px;object-fit:contain;display:block}
+  #vis-plush .pl-slot-prod img{width:100%;height:150px;object-fit:contain;display:block}
   #vis-plush .pl-slot-prod.show{opacity:1;transform:translateX(-50%) scale(1)}
   #vis-plush .pl-slot-box.hide{opacity:0;transform:scale(.8) translateY(-10px)}
   #vis-plush .pl-slot-name{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:#8C7B6B;white-space:nowrap;opacity:0;transition:opacity .3s}
@@ -2106,9 +2103,9 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
   #vis-plush .pl-labs{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8C7B6B;opacity:.6}
   #vis-plush .pl-src{margin-top:1.2rem;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8C7B6B;opacity:.5}
   @media(max-width:640px){
-    #vis-plush .pl-slot-box img{height:72px}
-    #vis-plush .pl-slot-prod img{height:72px}
-    #vis-plush .pl-shelf{min-height:90px;gap:3px}
+    #vis-plush .pl-slot-box img{height:95px}
+    #vis-plush .pl-slot-prod img{height:100px}
+    #vis-plush .pl-shelf{min-height:110px;gap:3px}
     #vis-plush .pl-slot-name{font-size:6px;bottom:-14px}
   }
 
@@ -2119,6 +2116,7 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
 
 <header class="hero">
   <div class="hero-inner">
+    <img src="labubu_character.png" alt="Labubu" style="width:120px;height:auto;display:block;margin:0 auto 1.5rem;">
     <p class="hero-pre">Asia Aisle IP Lab · April 2026</p>
     <h1>The Feeling Machine</h1>
     <p class="hero-sub">How Pop Mart built a multi-billion-dollar company by distributing a feeling it never needed to understand, and what happens now that understanding has become mandatory.</p>
@@ -2128,7 +2126,7 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
 <section class="prose-section" id="sec-I">
   <div class="section-header">
     <span class="section-num">I</span>
-    <h2>$5.1 billion in revenue. A 31% collapse the same week.</h2>
+    <h2><span class="count-up" data-target="5.1" data-prefix="$" data-suffix=" billion" data-decimals="1">$0</span> in revenue. A <span class="count-up" data-target="31" data-suffix="%" data-decimals="0">0%</span> collapse the same week.</h2>
   </div>
   <div class="prose-body">
     <p>On March 25, 2026, Pop Mart International reported the best financial year  in its history. Revenue reached approximately $5.1 billion,  a 184.7% increase over the prior year.<sup>¹</sup> Net profit surged 308% to approximately $1.75 billion.<sup>¹</sup> The company had grown faster than almost  any consumer brand of comparable scale anywhere in the world.</p>
@@ -2341,42 +2339,32 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
 
       <div class="columns">
         <div class="col" id="ps-col0">
-          <div class="col-bar-track">
-            <div class="col-bar filled" id="ps-bar0">
-              <div class="col-status active" id="ps-status0">Active</div>
-            </div>
+          <div class="col-icon-wrap">
+            <img src="product_design_icon.png" alt="Product Design" class="col-icon">
           </div>
           <div class="col-label" id="ps-label0">Product design</div>
         </div>
         <div class="col" id="ps-col1">
-          <div class="col-bar-track">
-            <div class="col-bar filled" id="ps-bar1">
-              <div class="col-status active" id="ps-status1">Active</div>
-            </div>
+          <div class="col-icon-wrap">
+            <img src="retail_experience_icon.png" alt="Retail Experience" class="col-icon">
           </div>
           <div class="col-label" id="ps-label1">Retail experience</div>
         </div>
         <div class="col" id="ps-col2">
-          <div class="col-bar-track">
-            <div class="col-bar filled" id="ps-bar2">
-              <div class="col-status active" id="ps-status2">Active</div>
-            </div>
+          <div class="col-icon-wrap">
+            <img src="community_engagement_design.png" alt="Community Engagement" class="col-icon">
           </div>
           <div class="col-label" id="ps-label2">Community engagement</div>
         </div>
         <div class="col" id="ps-col3">
-          <div class="col-bar-track">
-            <div class="col-bar filled" id="ps-bar3">
-              <div class="col-status active" id="ps-status3">Active</div>
-            </div>
+          <div class="col-icon-wrap">
+            <img src="global_expansion_icon.png" alt="Global Expansion" class="col-icon">
           </div>
           <div class="col-label" id="ps-label3">Global expansion</div>
         </div>
         <div class="col" id="ps-col4">
-          <div class="col-bar-track">
-            <div class="col-bar empty" id="ps-bar4">
-              <div class="col-status none" id="ps-status4">None</div>
-            </div>
+          <div class="col-icon-wrap absent">
+            <img src="narrative_development_icon.png" alt="Narrative Development" class="col-icon" style="opacity:0.3;">
           </div>
           <div class="col-label absent" id="ps-label4">Narrative development</div>
         </div>
@@ -2736,61 +2724,16 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
 
   <div class="rows-container">
 
-    <!-- Paddington -->
+    <!-- Barbie -->
     <div class="franchise-row">
-      <div class="franchise-label">Paddington</div>
+      <div class="franchise-label">Barbie</div>
       <div class="dots">
-        <div class="film-dot present" title="Paddington (2014)">
-          <span class="dot-return">4.9×</span>
-          <span class="dot-label">2014</span>
-        </div>
-        <div class="film-dot present" title="Paddington 2 (2017)">
-          <span class="dot-return">5.7×</span>
-          <span class="dot-label">2017</span>
-        </div>
-        <div class="film-dot absent" title="Paddington in Peru (2024)">
-          <span class="dot-return">1.2×</span>
-          <span class="dot-label">2024</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Trolls -->
-    <div class="franchise-row">
-      <div class="franchise-label">Trolls</div>
-      <div class="dots">
-        <div class="film-dot present" title="Trolls (2016)">
-          <span class="dot-return">2.8×</span>
-          <span class="dot-label">2016</span>
-        </div>
-        <div class="film-dot absent" title="Trolls World Tour (2020)">
-          <span class="dot-return">0.5×</span>
-          <span class="dot-label">2020</span>
-        </div>
-        <div class="film-dot absent" title="Trolls Band Together (2023)">
-          <span class="dot-return">2.2×</span>
+        <div class="film-dot present" title="Barbie (2023)">
+          <span class="dot-return">9.9×</span>
           <span class="dot-label">2023</span>
         </div>
       </div>
-    </div>
-
-    <!-- Sonic -->
-    <div class="franchise-row">
-      <div class="franchise-label">Sonic</div>
-      <div class="dots">
-        <div class="film-dot present" title="Sonic the Hedgehog (2020)">
-          <span class="dot-return">3.8×</span>
-          <span class="dot-label">2020</span>
-        </div>
-        <div class="film-dot present" title="Sonic the Hedgehog 2 (2022)">
-          <span class="dot-return">3.7×</span>
-          <span class="dot-label">2022</span>
-        </div>
-        <div class="film-dot present" title="Sonic the Hedgehog 3 (2024)">
-          <span class="dot-return">3.7×</span>
-          <span class="dot-label">2024</span>
-        </div>
-      </div>
+      <img class="franchise-char" src="barbie_character.png" alt="Barbie">
     </div>
 
     <!-- LEGO -->
@@ -2812,15 +2755,24 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
       </div>
     </div>
 
-    <!-- Barbie -->
+    <!-- Paddington -->
     <div class="franchise-row">
-      <div class="franchise-label">Barbie</div>
+      <div class="franchise-label">Paddington</div>
       <div class="dots">
-        <div class="film-dot present" title="Barbie (2023)">
-          <span class="dot-return">9.9×</span>
-          <span class="dot-label">2023</span>
+        <div class="film-dot present" title="Paddington (2014)">
+          <span class="dot-return">4.9×</span>
+          <span class="dot-label">2014</span>
+        </div>
+        <div class="film-dot present" title="Paddington 2 (2017)">
+          <span class="dot-return">5.7×</span>
+          <span class="dot-label">2017</span>
+        </div>
+        <div class="film-dot absent" title="Paddington in Peru (2024)">
+          <span class="dot-return">1.2×</span>
+          <span class="dot-label">2024</span>
         </div>
       </div>
+      <img class="franchise-char" src="paddington_character.png" alt="Paddington">
     </div>
 
     <!-- Garfield -->
@@ -2838,6 +2790,46 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
         <div class="film-dot absent" title="The Garfield Movie (2024)">
           <span class="dot-return">4.3×</span>
           <span class="dot-label">2024</span>
+        </div>
+      </div>
+      <img class="franchise-char" src="garfield_character.png" alt="Garfield">
+    </div>
+
+    <!-- Sonic -->
+    <div class="franchise-row">
+      <div class="franchise-label">Sonic</div>
+      <div class="dots">
+        <div class="film-dot present" title="Sonic the Hedgehog (2020)">
+          <span class="dot-return">3.8×</span>
+          <span class="dot-label">2020</span>
+        </div>
+        <div class="film-dot present" title="Sonic the Hedgehog 2 (2022)">
+          <span class="dot-return">3.7×</span>
+          <span class="dot-label">2022</span>
+        </div>
+        <div class="film-dot present" title="Sonic the Hedgehog 3 (2024)">
+          <span class="dot-return">3.7×</span>
+          <span class="dot-label">2024</span>
+        </div>
+      </div>
+      <img class="franchise-char" src="sonic_character.png" alt="Sonic">
+    </div>
+
+    <!-- Trolls -->
+    <div class="franchise-row">
+      <div class="franchise-label">Trolls</div>
+      <div class="dots">
+        <div class="film-dot present" title="Trolls (2016)">
+          <span class="dot-return">2.8×</span>
+          <span class="dot-label">2016</span>
+        </div>
+        <div class="film-dot absent" title="Trolls World Tour (2020)">
+          <span class="dot-return">0.5×</span>
+          <span class="dot-label">2020</span>
+        </div>
+        <div class="film-dot absent" title="Trolls Band Together (2023)">
+          <span class="dot-return">2.2×</span>
+          <span class="dot-label">2023</span>
         </div>
       </div>
     </div>
@@ -2970,6 +2962,36 @@ img[src^="images/"]{background:var(--border);border:1px dashed var(--stone);min-
 <p><sup>¹</sup> Pop Mart Annual Results Announcement, year ended 31 December 2025,  filed HKEX, March 2026. <sup>²</sup> Google Trends, "Labubu," United States, relative search volume,  accessed April 2026. <sup>³</sup> Pop Mart / Sony Pictures joint press release, March 19, 2026, as  cited by Xinhua; Screen Daily (Justin Kroll / Deadline), December 18,  2025. <sup>⁴</sup> Wang Ning statement, Xinhua wire service, March 29, 2026. <sup>⁵</sup> PKU Guanghua School of Management case study (Zhang Yichi, Wang  Xiaolong), 2020. <sup>⁶</sup> Li Xiang, Because of Uniqueness, 2023. <sup>⁷</sup> Jiemian News, 2020. <sup>⁸</sup> 36Kr, early 2026. <sup>⁹</sup> CCTV Finance interview, March 21, 2026. <sup>¹⁰</sup> Box Office Mojo; The Numbers. All return multiples, critical scores,  and audience ratings in Sections III and VII derived from these  sources unless otherwise noted. <sup>¹¹</sup> Si De statements, 2025 industry interview. Source publication not  independently confirmed; quoted as recorded by Asia Aisle. <sup>¹²</sup> Field interviews, Manhattan Pop Mart flagship, 2025. Informal sample;  not a structured survey. Findings reflect the interviewed population  only. <sup>¹³</sup> Pop Mart press release, November 2025. <sup>¹⁴</sup> Pop Mart / FIFA announcement, March 2026. <sup>¹⁵</sup> Consumer Edge financial telemetry; Deutsche Bank; Morgan Stanley  (Dustin Wei team). Transaction frequency, first-time buyer, pricing,  and supply volume data derived from these sources. Some figures are  composite estimates. <sup>¹⁶</sup> Asia Aisle IP Lab analysis of the 35-film companion-IP dataset.  Correlation and regression results are original to this study. <sup>¹⁷</sup> Robert McKee, Story (1997). <sup>¹⁸</sup> <sup>¹⁹</sup> <sup>²⁰</sup> See Methodology Notes above.</p></div></section>
 
 <script>
+(function(){
+  // Count-up animation for Section I numbers
+  var counters = document.querySelectorAll('.count-up');
+  var animated = false;
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting && !animated){
+        animated = true;
+        counters.forEach(function(el){
+          var target = parseFloat(el.dataset.target);
+          var prefix = el.dataset.prefix || '';
+          var suffix = el.dataset.suffix || '';
+          var decimals = parseInt(el.dataset.decimals) || 0;
+          var duration = 1800;
+          var start = performance.now();
+          function tick(now){
+            var elapsed = now - start;
+            var progress = Math.min(elapsed / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            var current = eased * target;
+            el.textContent = prefix + current.toFixed(decimals) + suffix;
+            if(progress < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        });
+      }
+    });
+  }, {threshold: 0.5});
+  counters.forEach(function(el){ observer.observe(el); });
+})();
 (function(){
 
   const chart = document.getElementById('proj-chart');
@@ -3156,46 +3178,26 @@ onScroll();
 (function(){
 
 const container = document.getElementById('ps-scrollContainer');
-const bars = [0,1,2,3].map(i => document.getElementById('ps-bar' + i));
-const emptyBar = document.getElementById('ps-bar4');
+const iconWraps = document.querySelectorAll('#vis-ps .col-icon-wrap');
 const labels = [0,1,2,3,4].map(i => document.getElementById('ps-label' + i));
-const statuses = [0,1,2,3,4].map(i => document.getElementById('ps-status' + i));
 const compStrip = document.getElementById('ps-compStrip');
 const footer = document.getElementById('ps-footer');
-const vizTitle = document.getElementById('ps-vizTitle');
-
-let lastPhase = -1;
 
 function render(progress) {
-  // Phase 0 (0-0.15): nothing
-  // Phase 1-4 (0.15-0.55): bars grow one at a time
-  // Phase 5 (0.55-0.7): empty bar appears, title changes
-  // Phase 6 (0.7-0.85): competitors appear
-  // Phase 7 (0.85-1.0): footer
-
-  // Bars grow sequentially
-  const barStarts = [0.1, 0.2, 0.3, 0.4];
-  const barDuration = 0.08;
-
-  bars.forEach((bar, i) => {
-    const p = Math.max(0, Math.min(1, (progress - barStarts[i]) / barDuration));
-    bar.style.height = (p * 100) + '%';
-    labels[i].style.opacity = p > 0.5 ? '1' : '0';
-    statuses[i].style.opacity = p > 0.8 ? '1' : '0';
+  // Icons appear sequentially
+  const starts = [0.08, 0.18, 0.28, 0.38, 0.52];
+  iconWraps.forEach((wrap, i) => {
+    const p = Math.max(0, Math.min(1, (progress - starts[i]) / 0.08));
+    wrap.style.opacity = p;
+    wrap.style.transform = 'translateY(' + (12 * (1 - p)) + 'px)';
+    if (labels[i]) labels[i].style.opacity = p > 0.5 ? '1' : '0';
   });
 
-  // Empty bar
-  const emptyP = Math.max(0, Math.min(1, (progress - 0.52) / 0.06));
-  emptyBar.style.height = (emptyP * 100) + '%';
-  labels[4].style.opacity = emptyP > 0.5 ? '1' : '0';
-  statuses[4].style.opacity = emptyP > 0.8 ? '1' : '0';
-
-
   // Competitors
-  compStrip.classList.toggle('visible', progress > 0.68);
+  compStrip.classList.toggle('visible', progress > 0.65);
 
   // Footer
-  footer.classList.toggle('visible', progress > 0.8);
+  footer.classList.toggle('visible', progress > 0.78);
 }
 
 let ticking = false;
